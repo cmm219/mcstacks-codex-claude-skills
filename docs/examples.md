@@ -47,3 +47,20 @@ Use claude-design-html with my installed local /design-html workflow to create a
 Codex asks Claude to use the user's installed local design workflow and write the result to an artifact folder, not directly into production app files. Codex then inspects the artifact, ports the approved design into the app, and QA checks the real app.
 
 This keeps third-party design tooling as a local design-time dependency, similar to Figma or a mockup generator. The shipped app or PR should stand on its own unless the user explicitly wants the artifact committed.
+
+## Gated Design Loop
+
+User:
+
+```text
+Use claude-design-loop for this dashboard redesign.
+```
+
+Expected loop:
+
+1. Claude generates a standalone HTML artifact using an installed local design workflow when available.
+2. Codex reviews the artifact and sends focused revisions to Claude until it is reviewable.
+3. The user approves the artifact.
+4. Claude or Codex implements the approved design in the real app.
+5. Codex reviews the diff and runs desktop/mobile browser QA.
+6. The user approves shipping.

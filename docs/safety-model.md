@@ -54,6 +54,8 @@ Some users may have local Claude design skills installed, such as `/design-html`
 
 Treat generated design artifacts as design-time references. Codex should port accepted designs into the real app using the repo's own patterns and verify the real app afterward.
 
+For strict design work, prefer `claude-design-loop`. It requires standalone artifact approval before app implementation and final user approval before shipping.
+
 ## Human Approval
 
 Human approval remains required for:

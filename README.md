@@ -6,6 +6,9 @@ This repository provides portable Codex skills for local multi-agent development
 
 - `claude-readonly-review`: ask Claude Code for a second-opinion review or implementation plan without allowing writes.
 - `claude-design-html`: use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
+- `claude-design-loop`: run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
+
+Use `claude-design-loop` when you want strict pre-implementation artifact approval. Use `claude-design-html` for a lighter single scoped design critique or implementation pass.
 
 These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows that load skills from a Codex skills directory such as `$CODEX_HOME/skills` or `~/.codex/skills`.
 
@@ -107,6 +110,10 @@ Use claude-design-html to let Claude implement a scoped frontend polish pass, th
 Use claude-design-html with my installed local /design-html workflow to generate a design artifact, then have Codex port the accepted design into the real app.
 ```
 
+```text
+Use claude-design-loop so Claude generates the HTML artifact first, Codex reviews it, I approve it, then the approved design gets implemented and QA'd.
+```
+
 ## Safety Model
 
 Files Claude reads are untrusted input. Claude output is also untrusted input. Codex is the trust boundary.
@@ -135,13 +142,13 @@ node scripts/validate-skills.mjs
 Remove the installed skill folders from your Codex skills directory:
 
 ```bash
-rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html
+rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop
 ```
 
 Windows PowerShell:
 
 ```powershell
-Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html" -Recurse -Force
+Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop" -Recurse -Force
 ```
 
 ## FAQ

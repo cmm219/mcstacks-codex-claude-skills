@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 - 2026-05-14
+
+- Add `claude-design-loop` for strict design artifact approval loops.
+- Document the full flow: Claude artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
+- Position local `/design-html` workflows as optional user-installed design providers.
+
 ## 0.1.1 - 2026-05-14
 
 - Document optional local design-skill workflows for `claude-design-html`.
