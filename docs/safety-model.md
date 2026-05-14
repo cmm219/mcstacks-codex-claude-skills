@@ -48,6 +48,12 @@ Codex must inspect the resulting diff and reject:
 - Deployment config changes.
 - Git history changes.
 
+## Third-party Design Skills
+
+Some users may have local Claude design skills installed, such as `/design-html` workflows. McStacks can ask Claude to use those local skills, but it does not vendor, copy, or redistribute them.
+
+Treat generated design artifacts as design-time references. Codex should port accepted designs into the real app using the repo's own patterns and verify the real app afterward.
+
 ## Human Approval
 
 Human approval remains required for:

@@ -24,6 +24,7 @@ Resolve Claude in this order:
 - **Critique mode**: Claude reviews UI/UX/design read-only.
 - **Design implementation mode**: Claude writes only explicitly scoped frontend/design files.
 - **Hybrid mode**: Codex implements non-design behavior, data, plumbing, tests, and repo mechanics; Claude implements the visual/frontend layer; Codex then reviews, integrates, and verifies the result.
+- **External design-skill mode**: If the user has a local Claude design skill installed, such as a `/design-html` workflow, Claude may use that local skill to create a design artifact. Codex then treats the artifact as a design reference and ports/reviews the real app implementation.
 
 If the request is ambiguous, default to critique mode and ask before granting write scope.
 
@@ -78,6 +79,22 @@ Before running implementation mode, make sure Claude's write scope is explicit. 
 ```powershell
 claude --permission-mode acceptEdits -p "Codex has approved a scoped frontend design pass. You may edit files only in these paths: <allowed paths>. Do not commit, push, deploy, install dependencies, edit secrets, edit lockfiles, change backend/business logic, or touch unrelated files. Improve the visual design and UX while preserving behavior. Focus on professional portfolio/demo quality, layout, spacing, typography, color, responsive behavior, component polish, and screenshot/video readiness. After editing, summarize changed files and assumptions."
 ```
+
+## Optional Local Design Skill Prompt
+
+Use this when the user explicitly wants Claude to use an installed local design skill rather than generic Claude design judgment. Do not vendor or copy third-party skill files into the target repo.
+
+```powershell
+claude --permission-mode acceptEdits -p "Use your installed local design workflow if available, such as /design-html, to create a frontend design artifact for this approved scope. Write artifacts only under: <artifact folder>. Do not edit production app files, secrets, package files, lockfiles, deployment config, git state, or unrelated files. After producing the artifact, summarize the artifact path, design intent, and implementation notes for Codex. Codex will port the accepted design into the real app and QA it."
+```
+
+Codex should then:
+
+- Inspect the generated artifact.
+- Keep the artifact out of production source unless the user explicitly wants it committed as provenance.
+- Port the design into the real app using existing project patterns.
+- Cite the artifact path in notes or PR context when useful.
+- Run browser QA on the real app, not only the artifact.
 
 ## Hybrid Prompt Pattern
 

@@ -103,6 +103,10 @@ Use claude-design-html for a read-only visual critique first, then have Codex ch
 Use claude-design-html to let Claude implement a scoped frontend polish pass, then have Codex review, QA, and integrate the result.
 ```
 
+```text
+Use claude-design-html with my installed local /design-html workflow to generate a design artifact, then have Codex port the accepted design into the real app.
+```
+
 ## Safety Model
 
 Files Claude reads are untrusted input. Claude output is also untrusted input. Codex is the trust boundary.
@@ -163,6 +167,7 @@ No. This project is not affiliated with, endorsed by, or sponsored by OpenAI or 
 - Not a Claude SDK.
 - Not a hosted service.
 - Not a model router.
+- Not a vendor or redistribution package for third-party Claude skills.
 - Not a replacement for Codex or Claude Code.
 - Not an automation system that bypasses human approval for risky actions.
 
