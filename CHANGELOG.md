@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-05-14
+
+- Add `AGENTS.md` with local project instructions for future Codex sessions.
+
 ## 0.2.0 - 2026-05-14
 
 - Add `claude-design-loop` for strict design artifact approval loops.
