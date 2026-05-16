@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-05-16
+
+- Expand README guidance on when to use each skill.
+- Add typical workflow sections for review, gated design, and PRD-to-shipping flows.
+
 ## 0.3.0 - 2026-05-16
 
 - Add `pr-batching` for choosing one PR, stacked PRs, or split PRs based on risk and verification boundaries.
