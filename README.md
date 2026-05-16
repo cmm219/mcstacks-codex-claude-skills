@@ -133,7 +133,7 @@ The preflight scripts do not validate `CLAUDE_DESIGN_CLI`. Smoke-test your wrapp
 
 The skills are plain text and should work wherever Codex skills and Claude Code are available. The platform-specific pieces are install/preflight scripts and CLI path discovery.
 
-Tested baseline for v0.1.0:
+Tested baseline:
 
 - Windows 11 + PowerShell
 - Codex CLI >= 0.125.0
