@@ -78,3 +78,35 @@ Expected loop:
 6. The user approves shipping.
 
 For data-heavy screens such as tables, dashboards, or queues, Codex should verify the artifact preserves real source links and user-provided data, accounts for default and optional fields, covers expanded and mobile states when relevant, and clearly states that app code has not been implemented before the user approval gate.
+
+## PRD Review Loop
+
+User:
+
+```text
+Use prd-review-loop to turn this feature idea into a PRD before we design or implement it.
+```
+
+Codex drafts or normalizes the PRD, scores it, uses Claude as a read-only reviewer when useful, applies only valid review findings, and marks it ready only when the score gate passes.
+
+## PR Batching
+
+User:
+
+```text
+Use pr-batching to decide whether these changes should be one PR, stacked PRs, or separate PRs.
+```
+
+Codex checks whether the work shares one risk surface, one verification story, and one safe revert path. It recommends separate PRs when auth, data, external sends, billing, migrations, deployment, or unrelated refactors would make a combined review unsafe.
+
+## PRD Ship Loop
+
+User:
+
+```text
+Use prd-ship-loop to execute this approved PRD. Keep going until the approved scope is complete unless a real stop condition applies.
+```
+
+Codex reads the approved scope, plans the execution, implements, verifies, uses Claude review and design gates when required, opens or updates PRs, watches checks, and continues to the next approved item instead of stopping after routine milestones. It stops for real blockers such as missing secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, or completion.
+
+A current ship token can authorize multiple PRs inside the same approved PRD or task list. Codex should not use it to invent follow-up scope outside that approval.

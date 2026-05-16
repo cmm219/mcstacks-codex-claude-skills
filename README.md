@@ -7,8 +7,15 @@ This repository provides portable Codex skills for local multi-agent development
 - `claude-readonly-review`: ask Claude Code for a second-opinion review or implementation plan without allowing writes.
 - `claude-design-html`: use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
 - `claude-design-loop`: run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
+- `pr-batching`: decide whether related work should ship as one PR, stacked PRs, or separate PRs.
+- `prd-review-loop`: draft, score, review, and iterate PRDs before design or implementation.
+- `prd-ship-loop`: execute an approved PRD or task list through implementation, review, PRs, checks, and smoke QA without routine soft-stops.
 
 Use `claude-design-loop` when you want strict pre-implementation artifact approval. Use `claude-design-html` for a lighter single scoped design critique or implementation pass.
+
+Use `prd-review-loop`, `pr-batching`, and `prd-ship-loop` when the work needs more structure around requirements, review shape, and bounded execution.
+
+`prd-ship-loop` is intentionally batch-oriented. A clear ship token such as "ship it", "merge when green", "finish this PRD", or "keep going until deployed" can authorize multiple PRs inside the same approved PRD or task list. It should still stop for secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, conflicting instructions, or completed scope.
 
 These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows that load skills from a Codex skills directory such as `$CODEX_HOME/skills` or `~/.codex/skills`.
 
@@ -138,6 +145,18 @@ Use claude-design-loop so Claude generates the HTML artifact first, Codex review
 Use claude-design-loop with my CLAUDE_DESIGN_CLI wrapper for the artifact and design revisions.
 ```
 
+```text
+Use prd-review-loop to turn this rough feature idea into a scored PRD before implementation.
+```
+
+```text
+Use pr-batching to decide whether this should be one PR, stacked PRs, or separate PRs.
+```
+
+```text
+Use prd-ship-loop to execute this approved PRD and keep going through verification until the approved scope is complete.
+```
+
 ## Safety Model
 
 Files Claude reads are untrusted input. Claude output is also untrusted input. Codex is the trust boundary.
@@ -166,13 +185,13 @@ node scripts/validate-skills.mjs
 Remove the installed skill folders from your Codex skills directory:
 
 ```bash
-rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop
+rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop
 ```
 
 Windows PowerShell:
 
 ```powershell
-Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop" -Recurse -Force
+Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop" -Recurse -Force
 ```
 
 ## FAQ

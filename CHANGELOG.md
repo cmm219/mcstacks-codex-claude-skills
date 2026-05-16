@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-05-16
+
+- Add `pr-batching` for choosing one PR, stacked PRs, or split PRs based on risk and verification boundaries.
+- Add `prd-review-loop` for drafting, scoring, reviewing, and iterating PRDs before design or implementation.
+- Add `prd-ship-loop` for bounded execution of approved PRDs or task lists through implementation, review, PRs, checks, and smoke QA.
+- Strengthen `claude-readonly-review` with batch-level plan review guidance for approved multi-PR scopes.
+- Update README and examples for the expanded workflow skill set.
+
 ## 0.2.2 - 2026-05-16
 
 - Add Batch Autonomy project instructions for approved multi-step task scopes.
