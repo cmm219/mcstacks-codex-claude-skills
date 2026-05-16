@@ -48,6 +48,18 @@ Codex asks Claude to use the user's installed local design workflow and write th
 
 This keeps third-party design tooling as a local design-time dependency, similar to Figma or a mockup generator. The shipped app or PR should stand on its own unless the user explicitly wants the artifact committed.
 
+## Optional Design-Enabled Claude Command
+
+User:
+
+```text
+Use claude-design-loop with my CLAUDE_DESIGN_CLI wrapper for the artifact and design revisions.
+```
+
+Codex resolves `CLAUDE_DESIGN_CLI` for design artifact generation and design revisions, while the default Claude setup remains unchanged. The wrapper is user-maintained and must accept stdin prompts, `-p`, `--permission-mode`, and `--allowed-tools`.
+
+Codex should not edit global Claude settings, enable plugins globally, or interfere with unrelated Claude processes. If the wrapper is missing or fails before a Claude session starts, Codex falls back to the normal Claude resolution path.
+
 ## Gated Design Loop
 
 User:
@@ -64,3 +76,5 @@ Expected loop:
 4. Claude or Codex implements the approved design in the real app.
 5. Codex reviews the diff and runs desktop/mobile browser QA.
 6. The user approves shipping.
+
+For data-heavy screens such as tables, dashboards, or queues, Codex should verify the artifact preserves real source links and user-provided data, accounts for default and optional fields, covers expanded and mobile states when relevant, and clearly states that app code has not been implemented before the user approval gate.

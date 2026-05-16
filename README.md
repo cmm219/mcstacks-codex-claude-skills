@@ -68,6 +68,26 @@ macOS / Linux example:
 export CLAUDE_CLI_PATH="$(command -v claude)"
 ```
 
+### Optional Design-Enabled Claude Command
+
+For frontend-heavy workflows, `claude-design-html` and `claude-design-loop` can use `CLAUDE_DESIGN_CLI` when set. This is optional advanced setup for users who maintain a separate Claude wrapper, profile command, or script with design plugins enabled for that session.
+
+Keep the default Claude setup lean. A design-enabled wrapper should not mutate global Claude settings, enable plugins globally, or interfere with unrelated Claude processes. It should accept the same CLI surface as Claude Code for these skills: stdin prompts, `-p`, `--permission-mode`, and `--allowed-tools`.
+
+Windows PowerShell example:
+
+```powershell
+$env:CLAUDE_DESIGN_CLI = "C:\path\to\your\claude-design-wrapper.ps1"
+```
+
+macOS / Linux example:
+
+```bash
+export CLAUDE_DESIGN_CLI="/path/to/your/claude-design-wrapper"
+```
+
+The preflight scripts do not validate `CLAUDE_DESIGN_CLI`. Smoke-test your wrapper locally before relying on it in a design loop.
+
 ## Supported Platforms
 
 The skills are plain text and should work wherever Codex skills and Claude Code are available. The platform-specific pieces are install/preflight scripts and CLI path discovery.
@@ -112,6 +132,10 @@ Use claude-design-html with my installed local /design-html workflow to generate
 
 ```text
 Use claude-design-loop so Claude generates the HTML artifact first, Codex reviews it, I approve it, then the approved design gets implemented and QA'd.
+```
+
+```text
+Use claude-design-loop with my CLAUDE_DESIGN_CLI wrapper for the artifact and design revisions.
 ```
 
 ## Safety Model

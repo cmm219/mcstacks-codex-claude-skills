@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2 - 2026-05-16
+
+- Add Batch Autonomy project instructions for approved multi-step task scopes.
+- Document optional `CLAUDE_DESIGN_CLI` support for design-enabled Claude wrappers or profiles.
+- Strengthen `claude-design-loop` artifact approval, timeout handling, and mechanical-vs-design edit boundaries.
+
 ## 0.2.1 - 2026-05-14
 
 - Add `AGENTS.md` with local project instructions for future Codex sessions.
