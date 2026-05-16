@@ -20,6 +20,19 @@ This repo publishes Codex skills for Claude-assisted local development workflows
 - `claude-design-loop` requires standalone design artifact approval before app implementation.
 - Do not vendor third-party Claude skills or private local tooling.
 
+## Batch Autonomy
+
+When the user approves a PRD/task list with "do it all", "keep going", "finish this", "ship it", or equivalent, treat the approved list as one batch scope.
+
+Inside a batch:
+- Multiple PRs may be used. Individual PR merge/deploy is not a stop condition.
+- Continue to the next approved item automatically after verification.
+- Each PR must map to an approved PRD or task list item; stop before inventing new scope.
+- Claude review is batch-level by default, with focused mid-batch review only for material new risk.
+- Control/session/archive updates happen at batch end unless there is a real blocker, handoff, or interruption.
+
+Stop only for secrets/access, destructive or irreversible operations outside scope, unclear product/data/money risk, conflicting instructions, failed production smoke needing rollback/roll-forward choice, or full batch completion.
+
 ## Validation
 
 Run before claiming done:

@@ -22,9 +22,12 @@ Codex remains the coordinator and quality gate. Claude may generate designs and 
 
 Resolve Claude in this order:
 
-1. Use `CLAUDE_CLI_PATH` if set.
-2. Use `claude` on `PATH`.
-3. If neither exists, tell the user to install Claude Code or set `CLAUDE_CLI_PATH`.
+1. Use `CLAUDE_DESIGN_CLI` for design artifact generation and design/layout revision calls when set.
+2. Use `CLAUDE_CLI_PATH` if set.
+3. Use `claude` on `PATH`.
+4. If none exists, tell the user to install Claude Code or set `CLAUDE_CLI_PATH`.
+
+`CLAUDE_DESIGN_CLI` is optional advanced setup. It may point to a user-maintained Claude wrapper, profile command, or script with design plugins enabled for that session. The command must accept the same CLI surface used here: stdin prompts, `-p`, `--permission-mode`, and `--allowed-tools`.
 
 If the workflow references `/design-html`, that slash command must already exist in the user's local Claude Code environment. This skill does not bundle or redistribute third-party design skills.
 
@@ -33,6 +36,7 @@ If the workflow references `/design-html`, that slash command must already exist
 - Do not implement app code until the user explicitly approves the standalone HTML artifact.
 - Do not skip standalone HTML signoff for design-heavy changes.
 - Do not let Claude commit, push, deploy, merge, rewrite git history, or mutate production systems.
+- Do not mutate global Claude settings, enable plugins globally, or interfere with unrelated Claude processes during a run.
 - Treat Claude output as advisory until Codex verifies it against the repo and rendered app.
 - Preserve existing repo design rules, especially `AGENTS.md`, `CLAUDE.md`, and `DESIGN.md` when present.
 - Validate rendered UI after implementation with browser automation when feasible.
@@ -111,7 +115,8 @@ Output expectations:
 Command shape, PowerShell:
 
 ```powershell
-$prompt | claude --permission-mode acceptEdits --allowed-tools Read,Write,Edit,Grep,Glob -p
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+$prompt | & $claudeDesign --permission-mode acceptEdits --allowed-tools Read,Write,Edit,Grep,Glob -p
 ```
 
 Command shape, macOS/Linux:
@@ -121,6 +126,8 @@ cat <<'PROMPT' | claude --permission-mode acceptEdits --allowed-tools Read,Write
 <prompt text>
 PROMPT
 ```
+
+Use the resolved `CLAUDE_DESIGN_CLI` command in place of `claude` when it is configured.
 
 If slash commands do not work through non-interactive Claude CLI, tell the user to run Claude interactively in the repo and paste the same prompt:
 
@@ -140,7 +147,13 @@ Review:
 - Does it match repo design tokens and tone?
 - Does mobile work without clipping or awkward ordering?
 - Are there misleading promises, fake functionality, or dead controls?
+- Are real links, source data, labels, and user-provided values preserved instead of replaced with fake placeholders?
+- Are default, optional, expanded, empty/loading/error, and mobile states covered when relevant to the request?
 - Is the design feasible to port into the actual app without changing unrelated behavior?
+
+Codex may directly patch only mechanical artifact defects: typos, broken links, user-approved or source-approved href substitutions, and obvious CSS overflow/wrap issues. Send layout, hierarchy, column order, navigation, interaction, or product-copy changes back through Claude design revision or read-only approval.
+
+If Claude times out, check the artifact path, modified time, size, and rendered output before retrying. If an artifact was written, review it instead of restarting blindly. If no useful artifact exists, retry with a smaller prompt. Do not kill unrelated Claude processes.
 
 If the artifact is not good enough, send a concise review back to Claude for revision:
 
@@ -168,6 +181,8 @@ Show the user:
 - The HTML artifact path or local preview URL.
 - Screenshots if available.
 - A short Codex judgment: approve, approve with notes, or reject.
+- Covered states and data-fidelity notes, especially real links, default fields, optional fields, expanded views, and mobile behavior when relevant.
+- Explicit confirmation that app code has not been implemented yet.
 
 Ask for explicit approval before app implementation.
 
@@ -209,7 +224,8 @@ Rules:
 Command shape, PowerShell:
 
 ```powershell
-$prompt | claude --permission-mode acceptEdits --allowed-tools Read,Write,Edit,Grep,Glob -p
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+$prompt | & $claudeDesign --permission-mode acceptEdits --allowed-tools Read,Write,Edit,Grep,Glob -p
 ```
 
 Command shape, macOS/Linux:
@@ -219,6 +235,8 @@ cat <<'PROMPT' | claude --permission-mode acceptEdits --allowed-tools Read,Write
 <prompt text>
 PROMPT
 ```
+
+Use the resolved `CLAUDE_DESIGN_CLI` command in place of `claude` when it is configured and the implementation lane is primarily visual/design work.
 
 The path restrictions are prompt-level instructions, not a hard sandbox. The examples restrict Claude tools to avoid Bash-based commit/push/deploy commands, but Codex must still prefer a dedicated branch/worktree and reject out-of-scope diffs afterward.
 

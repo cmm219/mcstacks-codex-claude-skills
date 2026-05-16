@@ -15,9 +15,12 @@ Default collaboration model: Claude is the preferred builder for frontend visual
 
 Resolve Claude in this order:
 
-1. Use `CLAUDE_CLI_PATH` if set.
-2. Use `claude` on `PATH`.
-3. If neither exists, tell the user to install Claude Code or set `CLAUDE_CLI_PATH`.
+1. Use `CLAUDE_DESIGN_CLI` for frontend design critique, artifact, and visual implementation calls when set.
+2. Use `CLAUDE_CLI_PATH` if set.
+3. Use `claude` on `PATH`.
+4. If none of these exist, tell the user to install Claude Code or set `CLAUDE_CLI_PATH`.
+
+`CLAUDE_DESIGN_CLI` is optional advanced setup. It may point to a user-maintained Claude wrapper, profile command, or script with design plugins enabled for that session. The command must accept the same CLI surface used here: stdin prompts, `-p`, `--permission-mode`, and `--allowed-tools`. Do not mutate global Claude settings or enable plugins globally during a skill run.
 
 ## Modes
 
@@ -69,7 +72,8 @@ The path restrictions in Claude prompts are prompt-level instructions. The actua
 ## Critique Prompt
 
 ```powershell
-claude --permission-mode plan --allowed-tools Read,Grep,Glob -p "You are reviewing this frontend as a portfolio/demo product. Do not edit files. Do not run mutating commands. Focus on first impression, visual hierarchy, spacing, typography, color, responsive behavior, demo readiness, accessibility, and amateur-looking rough edges. Return the top actionable issues ordered by impact, exact fixes, and what is good enough to leave alone."
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+& $claudeDesign --permission-mode plan --allowed-tools Read,Grep,Glob -p "You are reviewing this frontend as a portfolio/demo product. Do not edit files. Do not run mutating commands. Focus on first impression, visual hierarchy, spacing, typography, color, responsive behavior, demo readiness, accessibility, and amateur-looking rough edges. Return the top actionable issues ordered by impact, exact fixes, and what is good enough to leave alone."
 ```
 
 ## Design Implementation Prompt
@@ -77,7 +81,8 @@ claude --permission-mode plan --allowed-tools Read,Grep,Glob -p "You are reviewi
 Before running implementation mode, make sure Claude's write scope is explicit. Include only the Codex-approved parts of Claude's plan.
 
 ```powershell
-claude --permission-mode acceptEdits -p "Codex has approved a scoped frontend design pass. You may edit files only in these paths: <allowed paths>. Do not commit, push, deploy, install dependencies, edit secrets, edit lockfiles, change backend/business logic, or touch unrelated files. Improve the visual design and UX while preserving behavior. Focus on professional portfolio/demo quality, layout, spacing, typography, color, responsive behavior, component polish, and screenshot/video readiness. After editing, summarize changed files and assumptions."
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+& $claudeDesign --permission-mode acceptEdits -p "Codex has approved a scoped frontend design pass. You may edit files only in these paths: <allowed paths>. Do not commit, push, deploy, install dependencies, edit secrets, edit lockfiles, change backend/business logic, or touch unrelated files. Improve the visual design and UX while preserving behavior. Focus on professional portfolio/demo quality, layout, spacing, typography, color, responsive behavior, component polish, and screenshot/video readiness. After editing, summarize changed files and assumptions."
 ```
 
 ## Optional Local Design Skill Prompt
@@ -85,7 +90,8 @@ claude --permission-mode acceptEdits -p "Codex has approved a scoped frontend de
 Use this when the user explicitly wants Claude to use an installed local design skill rather than generic Claude design judgment. Do not vendor or copy third-party skill files into the target repo.
 
 ```powershell
-claude --permission-mode acceptEdits -p "Use your installed local design workflow if available, such as /design-html, to create a frontend design artifact for this approved scope. Write artifacts only under: <artifact folder>. Do not edit production app files, secrets, package files, lockfiles, deployment config, git state, or unrelated files. After producing the artifact, summarize the artifact path, design intent, and implementation notes for Codex. Codex will port the accepted design into the real app and QA it."
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+& $claudeDesign --permission-mode acceptEdits -p "Use your installed local design workflow if available, such as /design-html, to create a frontend design artifact for this approved scope. Write artifacts only under: <artifact folder>. Do not edit production app files, secrets, package files, lockfiles, deployment config, git state, or unrelated files. After producing the artifact, summarize the artifact path, design intent, and implementation notes for Codex. Codex will port the accepted design into the real app and QA it."
 ```
 
 Codex should then:
@@ -99,7 +105,8 @@ Codex should then:
 ## Hybrid Prompt Pattern
 
 ```powershell
-claude --permission-mode acceptEdits -p "Codex has prepared the non-design implementation and is handing you only the frontend design layer. You may edit files only in these paths: <allowed paths>. Do not change business logic, data contracts, backend code, tests unrelated to visual output, package files, lockfiles, secrets, git state, or deployment config. Improve the visual design and UX of the existing implementation while preserving behavior. After editing, summarize changed files and any assumptions."
+$claudeDesign = if ($env:CLAUDE_DESIGN_CLI) { $env:CLAUDE_DESIGN_CLI } elseif ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+& $claudeDesign --permission-mode acceptEdits -p "Codex has prepared the non-design implementation and is handing you only the frontend design layer. You may edit files only in these paths: <allowed paths>. Do not change business logic, data contracts, backend code, tests unrelated to visual output, package files, lockfiles, secrets, git state, or deployment config. Improve the visual design and UX of the existing implementation while preserving behavior. After editing, summarize changed files and any assumptions."
 ```
 
 ## Acceptance Criteria
