@@ -88,3 +88,35 @@ claude --permission-mode plan --tools "" -p "You are advising Codex on an implem
 - Convert valid findings into Codex-owned work.
 - Re-run relevant verification after changes.
 - In the final response, mention Claude was used only if its findings materially affected the outcome.
+
+## Batch-Level Plan Review
+
+For broad approved PRDs, task lists, production-sensitive changes, or multi-PR
+batches, use Claude as a batch-level safety gate rather than a per-branch
+ritual. One plan review can cover the whole approved batch when it names the
+intended slices, risk boundaries, verification, and stop gates.
+
+Use a focused plan prompt:
+
+```powershell
+claude --permission-mode plan --tools "" -p "You are reviewing an implementation plan. Do not edit files. Do not run commands. Review this plan for safety, correctness, scope control, verification gaps, and whether the proposed PR slices match the approved work. Return APPROVED or BLOCKED. If blocked, list exact required changes only: <plan>"
+```
+
+If Claude returns required changes, blocking concerns, or material implementation
+cautions, Codex must update the plan before editing code. If the required
+changes stay within the user-approved scope, rerun the read-only review on the
+revised plan. Repeat until Claude returns approved with no required changes, or
+until Codex explicitly rejects a finding with code-backed reasoning.
+
+During a multi-PR approved batch:
+
+- Prefer one initial Claude plan review for the batch plus focused diff reviews
+  only for risky slices.
+- Do not stop after each Claude review if findings are fixable inside scope.
+  Fix them, verify, and continue to the next batch item.
+- Do not perform end-of-work control, session, or archive updates after each
+  Claude review or PR. Save those for the end of the approved batch or a real
+  handoff.
+- If Claude identifies scope expansion, unclear requirements, or a material
+  product, security, privacy, architecture, or data-risk decision, stop and show
+  the user the issue before implementing.
