@@ -2,6 +2,21 @@
 
 ## Planned
 
+- Update the public `claude-readonly-review` skill from the latest exported full version.
+
+  Source reference:
+  `C:/Users/Cmcna/Documents/Codex/2026-06-04/read-only-dual-review-of-today/outputs/claude-readonly-review-skill-full.md`
+
+  Destination:
+  - `skills/claude-readonly-review/SKILL.md`
+
+  Requirements:
+  - Treat the source file as read/copy reference only.
+  - Do not delete, move, edit, or rewrite the source file.
+  - Adapt only as needed for the public McStacks repo: public-safe wording, no private paths, no local-only assumptions.
+  - Preserve the new `skills/` folder placement and validation behavior.
+  - Run skill validation, privacy scan, and Claude read-only review before publishing.
+
 - Port the public-safe parts of the local "A New Project Setup" notes into McStacks.
 
   Local source:
