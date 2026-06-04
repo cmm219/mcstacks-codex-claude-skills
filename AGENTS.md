@@ -1,15 +1,24 @@
-# AGENTS.md - McStacks Codex Claude Skills
+# AGENTS.md - McStacks
 
-This repo publishes Codex skills for Claude-assisted local development workflows.
+This repo publishes the public McStacks agent stack: Codex skills, public-safe brain patterns, workflow docs, agent boundaries, examples, and validation scripts.
 
 ## Project
 
 - GitHub: https://github.com/cmm219/mcstacks-codex-claude-skills
-- Current release line: v0.2.x
+- Current release line: v0.3.x
+- Public structure:
+  - `skills/`: installable Codex skills.
+  - `brain/`: public-safe memory routing templates and privacy guidance.
+  - `workflows/`: reusable process loops.
+  - `agents/`: role boundaries and handoff contracts.
+  - `scripts/`: install/preflight/validation.
 - Skills:
   - `claude-readonly-review`
   - `claude-design-html`
   - `claude-design-loop`
+  - `pr-batching`
+  - `prd-review-loop`
+  - `prd-ship-loop`
 
 ## Core Boundary
 
@@ -19,6 +28,7 @@ This repo publishes Codex skills for Claude-assisted local development workflows
 - Claude may write frontend/design work only under explicitly scoped workflows.
 - `claude-design-loop` requires standalone design artifact approval before app implementation.
 - Do not vendor third-party Claude skills or private local tooling.
+- Do not publish private memory. `brain/` is for templates, routing rules, and public examples only.
 
 ## Batch Autonomy
 
@@ -51,6 +61,7 @@ bash scripts/preflight.sh
 ## Publishing
 
 - Keep the repo public-safe: no secrets, local private paths, private project names, `.env*`, credentials, or private notes.
+- Treat public brain/workflow docs with the same privacy standard as skills.
 - Use MIT-compatible contributions only unless explicitly reviewed.
 - Update `CHANGELOG.md` for user-visible changes.
 - Tag releases semantically. Use patch versions for docs/fixes, minor versions for new skills or workflow surface.

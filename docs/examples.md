@@ -11,10 +11,14 @@ Use claude-readonly-review to review my current diff before I push.
 Codex:
 
 ```bash
-git diff | claude --permission-mode plan --tools "" -p "Review this diff..."
+git diff | claude --permission-mode plan --tools "" --model opus -p "Review this diff..."
 ```
 
-Claude returns findings. Codex then verifies each finding against the code, implements only valid fixes, and runs checks.
+`--model opus` is the default when Claude is acting as an approval gate. Use `sonnet` only for low-risk advisory checks.
+
+For implementation work, Codex first sends a scoped plan and QA plan. Claude returns `APPROVED`, `APPROVED WITH CHANGES`, or `BLOCKED`. Codex implements only after the plan gate is approved or a finding is rejected with evidence.
+
+After implementation, Codex runs checks and sends the final diff plus QA evidence for a second read-only review. Codex verifies each finding against the code, implements only valid fixes, and reruns checks before reporting completion.
 
 ## Frontend Design Critique
 
@@ -110,3 +114,15 @@ Use prd-ship-loop to execute this approved PRD. Keep going until the approved sc
 Codex reads the approved scope, plans the execution, implements, verifies, uses Claude review and design gates when required, opens or updates PRs, watches checks, and continues to the next approved item instead of stopping after routine milestones. It stops for real blockers such as missing secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, or completion.
 
 A current ship token can authorize multiple PRs inside the same approved PRD or task list. Codex should not use it to invent follow-up scope outside that approval.
+
+## Public Brain Routing
+
+User:
+
+```text
+Use McStacks brain routing to decide what context matters before planning this task.
+```
+
+Codex inspects live repo code for implementation truth, project state files for current status when present, and public-safe brain templates for reusable patterns. Private notes stay private unless the user explicitly chooses to publish a scrubbed version.
+
+The expected context budget is small: narrow search, read 1-3 relevant files, cite the paths, and escalate only when the question needs broader synthesis.
