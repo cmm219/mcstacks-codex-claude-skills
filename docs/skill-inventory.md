@@ -20,6 +20,7 @@ McStacks does not publish private project names, private local paths, live-syste
 | `claude-readonly-review` | `skills/claude-readonly-review` | `publish` | Core review gate for Codex-to-Claude second opinions. | Keep current with public-safe exported updates. |
 | `claude-design-html` | `skills/claude-design-html` | `publish` | Reusable design partner workflow with Codex review boundary. | Continue validating public-safe examples. |
 | `claude-design-loop` | `skills/claude-design-loop` | `publish` | Reusable gated design artifact workflow. | Continue validating public-safe examples. |
+| `codex-handoff-packet` | `skills/codex-handoff-packet` | `publish` | Reverse handoff pattern for Claude-originated requests while preserving Codex-owned repo authority. | Validate against real handoff usage. |
 | `pr-batching` | `skills/pr-batching` | `publish` | General PR-scope decision framework. | None. |
 | `prd-review-loop` | `skills/prd-review-loop` | `publish` | General PRD creation/review workflow. | None. |
 | `prd-ship-loop` | `skills/prd-ship-loop` | `publish` | General approved-scope shipping workflow. | None. |

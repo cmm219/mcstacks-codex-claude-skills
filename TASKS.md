@@ -5,6 +5,9 @@
 - Consolidated McStacks as the current public stack home.
 - Added public-safe skill inventory, new-project setup docs, setup modules, workflow pages, and brain templates.
 - Updated `claude-readonly-review` with high-risk plan and QA gate guidance.
+- Added first-run install polish, McStacks workflow loop, public preflight expectations, and GStack non-goal language.
+- Added `codex-handoff-packet` plus Claude-to-Codex workflow and example.
+- Wired public brain templates into new-project setup docs and added completed-work shipping guidance.
 
 ## Planned
 
@@ -58,3 +61,17 @@
   - Include scope, evidence, proposed task, risk level, and stop conditions.
   - Require Codex to verify the request before editing or running commands.
   - Document when the reverse trigger is useful versus when the user should talk to Codex directly.
+
+  Status:
+  - Completed as `skills/codex-handoff-packet/SKILL.md`, `workflows/claude-to-codex-handoff.md`, and `examples/claude-to-codex-handoff.md`.
+
+- Evaluate whether completed-work shipping needs a dedicated skill.
+
+  Current approach:
+  - Route completed branches/diffs through `prd-ship-loop` using `workflows/ship-completed-work.md`.
+  - Treat the existing diff as the approved explicit scope.
+  - Do not create a separate `ship-loop` skill until real usage proves the contract differs from `prd-ship-loop`.
+
+  Status:
+  - Workflow guidance added.
+  - Dedicated skill deferred.

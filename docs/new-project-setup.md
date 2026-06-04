@@ -33,6 +33,36 @@ Every serious project should start with:
 7. Add PR/worktree isolation only when concurrent or risky work requires it.
 8. Run the scaffold checks available for the project.
 
+## Copy The Public Templates
+
+Use the files in [`../brain/templates/`](../brain/templates/) as the public-safe skeleton. Copy the shape, then replace placeholders with the new project's values.
+
+Suggested mapping:
+
+| Source Template | Target |
+| --- | --- |
+| [`brain/templates/state.md`](../brain/templates/state.md) | `control/STATE.md` |
+| [`brain/templates/tasks.md`](../brain/templates/tasks.md) | `control/TASKS.md` |
+| [`brain/templates/guardrails.md`](../brain/templates/guardrails.md) | `control/CODEX_GUARDRAILS.md` |
+| [`brain/templates/session-note.md`](../brain/templates/session-note.md) | `sessions/YYYY-MM-DD-topic.md` |
+| [`brain/templates/backlog.md`](../brain/templates/backlog.md) | `tasks/backlog.md` |
+| [`brain/templates/review-packet.md`](../brain/templates/review-packet.md) | `tasks/audits/<topic>-review.md` |
+| [`brain/templates/project-memory.md`](../brain/templates/project-memory.md) | project memory starter |
+
+Minimal startup pointer for repo `AGENTS.md`:
+
+```markdown
+# AGENTS.md
+
+Before answering project-memory, resume, planning, or prior-decision questions, read:
+
+- `control/STATE.md`
+- `control/TASKS.md`
+- `control/CODEX_GUARDRAILS.md`
+
+Use live repo search for implementation truth. Keep startup context small. Do not publish secrets, credentials, private notes, transcripts, or local absolute paths.
+```
+
 ## Agent-Assisted Handoff Prompt
 
 ```text

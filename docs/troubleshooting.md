@@ -42,6 +42,20 @@ or:
 
 Confirm the skills were copied to the Codex skills directory used by your Codex installation.
 
+Expected shape:
+
+```text
+McStacks preflight
+Repo: <repo path>
+Codex skills dir: <skills path>
+OK: found skills
+OK: skill metadata validated
+OK: Claude CLI found
+Done
+```
+
+Exact paths and wording can vary by platform. Treat missing skills, failed metadata validation, or missing Claude CLI as setup issues to fix before relying on review or shipping loops.
+
 ## Claude asks for permission during read-only review
 
 Prefer stdin context with tools disabled:
