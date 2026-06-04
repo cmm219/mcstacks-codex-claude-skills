@@ -40,3 +40,12 @@ The user owns:
 - Pass the smallest useful context.
 - Treat model output as review input, not authority.
 - Verify before shipping.
+
+## Porting Guard
+
+When adapting private project setup, notes, or skills into McStacks:
+
+- Copy the structure, not the private content.
+- Replace local paths with placeholders.
+- Strip private project names, service names, ports, transcripts, logs, and deploy targets.
+- Stop if a useful private detail cannot be safely generalized.

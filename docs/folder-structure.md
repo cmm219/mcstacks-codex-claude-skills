@@ -43,6 +43,12 @@ Copy-paste examples for common usage.
 
 Safety model, troubleshooting, and repository structure documentation.
 
+Key docs:
+
+- `new-project-setup.md` — serious-project bootstrap flow.
+- `setup-modules.md` — optional setup modules by risk.
+- `skill-inventory.md` — public-safe skill classification.
+
 ## Why Keep `skills/` At The Root?
 
 Codex skill installers expect a simple directory of skill folders. Keeping `skills/` at the root lets McStacks grow into a full stack without breaking installation.

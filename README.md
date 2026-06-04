@@ -40,6 +40,8 @@ These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows tha
 | Decide PR shape | `pr-batching` | Codex recommends one PR, stacked PRs, or split PRs based on risk and verification. |
 | Turn a rough feature idea into requirements | `prd-review-loop` | Codex drafts/scores a PRD and uses Claude review when useful. |
 | Execute an approved PRD/task list | `prd-ship-loop` | Codex implements, verifies, opens/updates PRs, and continues through approved scope. |
+| Bootstrap a serious project | [`docs/new-project-setup.md`](docs/new-project-setup.md) | McStacks gives the repo control files, startup rules, workflow modules, and review gates. |
+| Decide what parts of the stack are public | [`docs/skill-inventory.md`](docs/skill-inventory.md) | Skills are classified as publishable, generic patterns, private, or follow-up. |
 
 Start small. Use `claude-readonly-review` for a review, `claude-design-loop` for high-impact UI work that needs approval before implementation, and `prd-ship-loop` only after the PRD or task list is approved. See [`workflows/`](workflows/) for how these skills compose into larger loops.
 
@@ -223,6 +225,7 @@ That means Codex must:
 
 See [docs/safety-model.md](docs/safety-model.md).
 See [docs/folder-structure.md](docs/folder-structure.md) for how the public stack is organized.
+See [docs/new-project-setup.md](docs/new-project-setup.md) for the serious-project bootstrap flow.
 
 ## Validate
 

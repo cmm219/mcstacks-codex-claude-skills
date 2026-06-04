@@ -1,11 +1,17 @@
 # Tasks
 
+## Completed
+
+- Consolidated McStacks as the current public stack home.
+- Added public-safe skill inventory, new-project setup docs, setup modules, workflow pages, and brain templates.
+- Updated `claude-readonly-review` with high-risk plan and QA gate guidance.
+
 ## Planned
 
 - Update the public `claude-readonly-review` skill from the latest exported full version.
 
   Source reference:
-  `C:/Users/Cmcna/Documents/Codex/2026-06-04/read-only-dual-review-of-today/outputs/claude-readonly-review-skill-full.md`
+  Private local export provided by the maintainer. Do not publish the local path.
 
   Destination:
   - `skills/claude-readonly-review/SKILL.md`
@@ -17,10 +23,14 @@
   - Preserve the new `skills/` folder placement and validation behavior.
   - Run skill validation, privacy scan, and Claude read-only review before publishing.
 
-- Port the public-safe parts of the local "A New Project Setup" notes into McStacks.
+  Status:
+  - Initial public-safe update completed.
+  - Follow-up remains: compare future exported versions against the public skill when new exports are provided.
+
+- Port the public-safe parts of the private local project-setup notes into McStacks.
 
   Local source:
-  `C:\Users\Cmcna\Dev\notes\projects\A New Project Setup`
+  Private local project-setup notes provided by the maintainer. Do not publish the local path or private folder name.
 
   Likely destinations:
   - `workflows/`: new-project setup flow, GitHub PR flow, concurrent worktree guidance, handoff prompts.
@@ -33,6 +43,10 @@
   - Convert private examples into generic public templates.
   - Preserve the fast/minimal-context startup pattern.
   - Run privacy scans and Claude read-only review before publishing.
+
+  Status:
+  - Initial public-safe docs/templates completed.
+  - Follow-up remains: decide whether any script templates should be public after separate review.
 
 - Build a Claude-to-Codex trigger workflow.
 

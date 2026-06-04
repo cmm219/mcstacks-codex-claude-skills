@@ -11,6 +11,9 @@ Workflows explain how McStacks skills compose into repeatable loops.
 | PRD review | `prd-review-loop` | A feature idea needs requirements before implementation. |
 | PR batching | `pr-batching` | Work may need one PR, stacked PRs, or split PRs. |
 | PRD ship loop | `prd-ship-loop` | An approved PRD or task list should be implemented through verification. |
+| New project bootstrap | [`new-project-bootstrap.md`](new-project-bootstrap.md) | A serious project needs startup files, control pointers, and setup modules. |
+| GitHub PR flow | [`github-pr-flow.md`](github-pr-flow.md) | Repo work should branch from origin, verify, PR, merge, and clean up deliberately. |
+| Worktree PR module | [`worktree-pr-module.md`](worktree-pr-module.md) | Concurrent or risky repo work needs isolated execution. |
 
 ## Default Sequence
 
