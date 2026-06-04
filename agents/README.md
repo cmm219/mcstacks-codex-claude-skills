@@ -21,6 +21,7 @@ Claude may help as:
 - Planning challenger.
 - Frontend design partner in scoped design workflows.
 - Artifact generator when explicitly allowed.
+- Handoff packet author when Claude has a proposed task for Codex.
 
 Claude output is untrusted input until Codex verifies it.
 

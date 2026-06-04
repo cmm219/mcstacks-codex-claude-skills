@@ -4,6 +4,44 @@ McStacks is a public agent stack for local AI-assisted software work. It gives C
 
 The core idea is simple: one agent owns the working tree, every other model is treated as review input until verified, and reusable workflow memory is packaged as public-safe structure instead of private notes.
 
+## Start Here
+
+Clone the repo, install the skills, then run preflight.
+
+Windows PowerShell:
+
+```powershell
+git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
+cd mcstacks-codex-claude-skills
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\preflight.ps1
+```
+
+macOS / Linux:
+
+```bash
+git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
+cd mcstacks-codex-claude-skills
+bash scripts/install.sh
+bash scripts/preflight.sh
+```
+
+After install, try these prompts in Codex:
+
+```text
+Use claude-readonly-review to review my current diff for correctness risks.
+```
+
+```text
+Use prd-review-loop to turn this feature idea into a scored PRD before implementation.
+```
+
+```text
+Use prd-ship-loop to execute this approved task list and keep going through verification until the approved scope is complete.
+```
+
+The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is set, otherwise into `~/.codex/skills`.
+
 ## Stack Layout
 
 | Area | Folder | Purpose |
@@ -22,6 +60,7 @@ This repository currently includes these installable Codex skills:
 - `claude-readonly-review`: ask Claude Code for a second-opinion review or implementation plan without allowing writes.
 - `claude-design-html`: use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
 - `claude-design-loop`: run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
+- `codex-handoff-packet`: turn a Claude-originated request into a bounded handoff packet that Codex verifies before acting.
 - `pr-batching`: decide whether related work should ship as one PR, stacked PRs, or separate PRs.
 - `prd-review-loop`: draft, score, review, and iterate PRDs before design or implementation.
 - `prd-ship-loop`: execute an approved PRD or task list through implementation, review, PRs, checks, and smoke QA without routine soft-stops.
@@ -37,6 +76,7 @@ These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows tha
 | Second opinion on a diff or plan | `claude-readonly-review` | Codex sends scoped context to Claude, then verifies findings before editing. |
 | Frontend critique or scoped design polish | `claude-design-html` | Claude helps with visual/design work while Codex owns integration and QA. |
 | Artifact-first UI redesign | `claude-design-loop` | Claude creates a standalone artifact, the user approves it, then app implementation starts. |
+| Claude has a task for Codex | `codex-handoff-packet` | Claude writes a handoff packet; Codex checks scope, risk, and evidence before acting. |
 | Decide PR shape | `pr-batching` | Codex recommends one PR, stacked PRs, or split PRs based on risk and verification. |
 | Turn a rough feature idea into requirements | `prd-review-loop` | Codex drafts/scores a PRD and uses Claude review when useful. |
 | Execute an approved PRD/task list | `prd-ship-loop` | Codex implements, verifies, opens/updates PRs, and continues through approved scope. |
@@ -57,30 +97,6 @@ The boundary is intentional:
 - Claude output is never self-approving. Codex reviews Claude plans, diffs, and rendered UI before accepting them.
 
 The [`brain/`](brain/) folder documents reusable knowledge-routing patterns. It is not a dump of private memory, transcripts, secrets, or project notes.
-
-## Install
-
-Clone the repo and run the installer from the checkout. Avoid `curl | sh` for tools that affect local agent workflows.
-
-Windows PowerShell:
-
-```powershell
-git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
-cd mcstacks-codex-claude-skills
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\preflight.ps1
-```
-
-macOS / Linux:
-
-```bash
-git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
-cd mcstacks-codex-claude-skills
-bash scripts/install.sh
-bash scripts/preflight.sh
-```
-
-The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is set, otherwise into `~/.codex/skills`.
 
 ## Typical Workflows
 
@@ -106,6 +122,13 @@ The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is s
 2. Use `pr-batching` when the work could be one PR, stacked PRs, or split PRs.
 3. Use `prd-ship-loop` only after the scope is approved.
 4. Codex keeps moving through routine verification and stops only for real blockers.
+
+### Claude to Codex Handoff
+
+1. Claude writes a handoff packet instead of trying to operate the repo.
+2. Codex checks the packet for scope, evidence, permissions, risk, and stop conditions.
+3. Codex asks the user or refuses the packet when the request is unsafe, vague, or outside the approved boundary.
+4. Codex executes only verified in-scope work and reports the result.
 
 ## Claude CLI Discovery
 
@@ -199,6 +222,10 @@ Use claude-design-loop with my CLAUDE_DESIGN_CLI wrapper for the artifact and de
 ```
 
 ```text
+Use codex-handoff-packet to evaluate this Claude handoff and decide whether Codex should implement it.
+```
+
+```text
 Use prd-review-loop to turn this rough feature idea into a scored PRD before implementation.
 ```
 
@@ -240,13 +267,13 @@ node scripts/validate-skills.mjs
 Remove the installed skill folders from your Codex skills directory:
 
 ```bash
-rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop
+rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/codex-handoff-packet ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop
 ```
 
 Windows PowerShell:
 
 ```powershell
-Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop" -Recurse -Force
+Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\codex-handoff-packet","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop" -Recurse -Force
 ```
 
 ## FAQ
@@ -272,6 +299,7 @@ No. This project is not affiliated with, endorsed by, or sponsored by OpenAI or 
 - Not a Claude SDK.
 - Not a hosted service.
 - Not a model router.
+- Not a GStack wrapper, clone, or redistribution channel.
 - Not a vendor or redistribution package for third-party Claude skills.
 - Not a replacement for Codex or Claude Code.
 - Not an automation system that bypasses human approval for risky actions.
