@@ -27,6 +27,8 @@ Use [`privacy.md`](privacy.md) before turning private lessons into public exampl
 
 Use [`templates/project-memory.md`](templates/project-memory.md) as a starting point for public project memory files.
 
+Use the templates in [`templates/`](templates/) for project state, task focus, guardrails, sessions, backlog, and review packets.
+
 ## Default Rule
 
 Public McStacks brain content should teach the pattern, not expose the private source. Convert specifics into reusable, source-safe examples before publishing.

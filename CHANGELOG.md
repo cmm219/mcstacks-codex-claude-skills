@@ -2,6 +2,8 @@
 
 ## 0.3.2 - 2026-06-04
 
+- Add McStacks consolidation PRD, skill inventory, serious-project setup docs, setup modules, workflow pages, and brain templates.
+- Strengthen `claude-readonly-review` with high-risk plan and QA gates from the latest private source reference.
 - Reframe the repository as the broader McStacks public agent stack, with top-level `brain/`, `workflows/`, and `agents/` areas.
 - Add local-first brain guidance for fast, minimal-context knowledge routing.
 - Add `TASKS.md` with a planned Claude-to-Codex trigger workflow.

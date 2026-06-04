@@ -29,6 +29,9 @@ Use this as a public-safe project memory starter. Keep it concise and repo-relat
 - Tests:
 - Docs:
 - Scripts:
+- Control:
+- Sessions:
+- Backlog:
 
 ## Durable Lessons
 
