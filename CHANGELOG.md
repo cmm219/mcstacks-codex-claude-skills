@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.2 - 2026-06-04
+
+- Reframe the repository as the broader McStacks public agent stack, with top-level `brain/`, `workflows/`, and `agents/` areas.
+- Add local-first brain guidance for fast, minimal-context knowledge routing.
+- Add `TASKS.md` with a planned Claude-to-Codex trigger workflow.
+- Strengthen `claude-readonly-review` with the default plan-approval and final diff/QA approval loops.
+- Add model routing guidance for `opus`, `sonnet`, and chunked large-context review packets without pinning future model IDs.
+- Document same-session review reuse with `--output-format json` session capture and `--resume`.
+- Add Markdown review packet conventions, freshness checks, finding IDs, status tags, timeout handling, and opt-in raw-response retention guidance.
+- Update the read-only review example and README workflow to reflect the improved loop.
+
 ## 0.3.1 - 2026-05-16
 
 - Expand README guidance on when to use each skill.

@@ -1,8 +1,23 @@
-# McStacks: Codex Claude Skills
+# McStacks
 
-Codex skills that call Claude Code for review, planning, and design. Codex stays in charge of the repo, QA, and merge.
+McStacks is a public agent stack for local AI-assisted software work. It gives Codex a repeatable way to use Claude Code for review, planning, design, PRD loops, and shipping discipline while Codex stays in charge of the repo, QA, and merge.
 
-This repository provides portable Codex skills for local multi-agent development workflows:
+The core idea is simple: one agent owns the working tree, every other model is treated as review input until verified, and reusable workflow memory is packaged as public-safe structure instead of private notes.
+
+## Stack Layout
+
+| Area | Folder | Purpose |
+| --- | --- | --- |
+| Skills | [`skills/`](skills/) | Installable Codex skills that activate specific workflows. |
+| Brain | [`brain/`](brain/) | Public-safe memory routing patterns, templates, and privacy rules. |
+| Workflows | [`workflows/`](workflows/) | Human-readable operating loops that connect skills into repeatable processes. |
+| Agents | [`agents/`](agents/) | Role boundaries for Codex, Claude, and shared handoffs. |
+| Scripts | [`scripts/`](scripts/) | Install, preflight, and validation helpers. |
+| Examples | [`examples/`](examples/) | Copy-paste usage examples for common workflows. |
+| Docs | [`docs/`](docs/) | Safety model, troubleshooting, and repo structure guidance. |
+| Tasks | [`TASKS.md`](TASKS.md) | Public roadmap items and follow-up work. |
+
+This repository currently includes these installable Codex skills:
 
 - `claude-readonly-review`: ask Claude Code for a second-opinion review or implementation plan without allowing writes.
 - `claude-design-html`: use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
@@ -26,7 +41,7 @@ These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows tha
 | Turn a rough feature idea into requirements | `prd-review-loop` | Codex drafts/scores a PRD and uses Claude review when useful. |
 | Execute an approved PRD/task list | `prd-ship-loop` | Codex implements, verifies, opens/updates PRs, and continues through approved scope. |
 
-Start small. Use `claude-readonly-review` for a review, `claude-design-loop` for high-impact UI work that needs approval before implementation, and `prd-ship-loop` only after the PRD or task list is approved.
+Start small. Use `claude-readonly-review` for a review, `claude-design-loop` for high-impact UI work that needs approval before implementation, and `prd-ship-loop` only after the PRD or task list is approved. See [`workflows/`](workflows/) for how these skills compose into larger loops.
 
 ## Why Codex + Claude?
 
@@ -38,6 +53,8 @@ The boundary is intentional:
 - Claude can review or plan in read-only mode.
 - Claude can write frontend/design files only when explicitly scoped by `claude-design-html`.
 - Claude output is never self-approving. Codex reviews Claude plans, diffs, and rendered UI before accepting them.
+
+The [`brain/`](brain/) folder documents reusable knowledge-routing patterns. It is not a dump of private memory, transcripts, secrets, or project notes.
 
 ## Install
 
@@ -68,10 +85,10 @@ The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is s
 ### Safer Review
 
 1. Ask Codex to use `claude-readonly-review`.
-2. Codex sends only the relevant diff, files, logs, or plan.
-3. Claude returns findings.
-4. Codex verifies them against the repo and applies only valid fixes.
-5. Codex runs the relevant checks before reporting back.
+2. Codex sends Claude a scoped plan and QA plan for approval when implementation work is involved.
+3. Codex implements the approved plan, keeping Claude read-only.
+4. Codex runs the relevant checks, then sends the final diff plus QA results for review.
+5. Codex fixes valid in-scope findings, rejects invalid findings with evidence, and reports only after the loop is approved or a real blocker remains.
 
 ### Gated Design
 
@@ -205,6 +222,7 @@ That means Codex must:
 - Require human approval for secrets, destructive commands, production deploys, money movement, account changes, or other high-risk actions.
 
 See [docs/safety-model.md](docs/safety-model.md).
+See [docs/folder-structure.md](docs/folder-structure.md) for how the public stack is organized.
 
 ## Validate
 
