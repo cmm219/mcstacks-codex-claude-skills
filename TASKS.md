@@ -2,6 +2,23 @@
 
 ## Planned
 
+- Port the public-safe parts of the local "A New Project Setup" notes into McStacks.
+
+  Local source:
+  `C:\Users\Cmcna\Dev\notes\projects\A New Project Setup`
+
+  Likely destinations:
+  - `workflows/`: new-project setup flow, GitHub PR flow, concurrent worktree guidance, handoff prompts.
+  - `brain/templates/`: project control templates such as `STATE.md`, `TASKS.md`, startup files, and guardrails.
+  - `docs/`: folder map, versioning, setup tiers, and public-safe explanation docs.
+
+  Requirements:
+  - Do not copy the private folder verbatim.
+  - Strip private project names, local paths, transcripts, client details, and live-bot specifics.
+  - Convert private examples into generic public templates.
+  - Preserve the fast/minimal-context startup pattern.
+  - Run privacy scans and Claude read-only review before publishing.
+
 - Build a Claude-to-Codex trigger workflow.
 
   The current `claude-readonly-review` skill is for Codex to call Claude as a read-only reviewer. McStacks should also define the reverse path: a safe workflow or skill that lets Claude trigger Codex for repo-owned implementation, verification, git, PR, and shipping work without giving Claude direct authority over those actions.
