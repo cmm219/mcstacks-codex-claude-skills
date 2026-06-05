@@ -8,6 +8,7 @@
 - Added first-run install polish, McStacks workflow loop, public preflight expectations, and GStack non-goal language.
 - Added `codex-handoff-packet` plus Claude-to-Codex workflow and example.
 - Wired public brain templates into new-project setup docs and added completed-work shipping guidance.
+- Refreshed `claude-readonly-review` from the latest public-safe local update, including packet transport, retention, and batch review guidance.
 
 ## Planned
 
@@ -27,7 +28,7 @@
   - Run skill validation, privacy scan, and Claude read-only review before publishing.
 
   Status:
-  - Initial public-safe update completed.
+  - Latest provided local update ported public-safely.
   - Follow-up remains: compare future exported versions against the public skill when new exports are provided.
 
 - Port the public-safe parts of the private local project-setup notes into McStacks.
