@@ -4,7 +4,13 @@ McStacks is organized as a public agent stack.
 
 ```text
 mcstacks/
-  skills/
+  claude-readonly-review/
+  claude-design-html/
+  claude-design-loop/
+  codex-handoff-packet/
+  pr-batching/
+  prd-review-loop/
+  prd-ship-loop/
   brain/
   workflows/
   agents/
@@ -13,9 +19,11 @@ mcstacks/
   docs/
 ```
 
-## `skills/`
+## Root-Level Skill Folders
 
-Installable Codex skills. The install scripts copy only this folder into the user's Codex skills directory.
+Installable Codex skills live as root-level directories with a `SKILL.md` file inside each folder.
+
+This mirrors how users browse skill-heavy repos on GitHub: the actual skills are visible immediately in the first file list instead of being hidden under a package directory.
 
 ## `brain/`
 
@@ -49,6 +57,6 @@ Key docs:
 - `setup-modules.md` — optional setup modules by risk.
 - `skill-inventory.md` — public-safe skill classification.
 
-## Why Keep `skills/` At The Root?
+## Why Keep Skills At The Root?
 
-Codex skill installers expect a simple directory of skill folders. Keeping `skills/` at the root lets McStacks grow into a full stack without breaking installation.
+The install and validation scripts discover root-level directories that contain `SKILL.md`. This keeps McStacks easy to browse on GitHub while still letting the repo grow into a full stack with `brain/`, `workflows/`, `docs/`, and `examples/`.

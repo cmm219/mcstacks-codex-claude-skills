@@ -9,6 +9,7 @@
 - Added `codex-handoff-packet` plus Claude-to-Codex workflow and example.
 - Wired public brain templates into new-project setup docs and added completed-work shipping guidance.
 - Refreshed `claude-readonly-review` from the latest public-safe local update, including packet transport, retention, and batch review guidance.
+- Moved installable skills to root-level `*/SKILL.md` folders so GitHub shows the skill code first.
 
 ## Planned
 
@@ -18,13 +19,13 @@
   Private local export provided by the maintainer. Do not publish the local path.
 
   Destination:
-  - `skills/claude-readonly-review/SKILL.md`
+  - `claude-readonly-review/SKILL.md`
 
   Requirements:
   - Treat the source file as read/copy reference only.
   - Do not delete, move, edit, or rewrite the source file.
   - Adapt only as needed for the public McStacks repo: public-safe wording, no private paths, no local-only assumptions.
-  - Preserve the new `skills/` folder placement and validation behavior.
+  - Preserve root-level skill placement and validation behavior.
   - Run skill validation, privacy scan, and Claude read-only review before publishing.
 
   Status:
@@ -64,7 +65,7 @@
   - Document when the reverse trigger is useful versus when the user should talk to Codex directly.
 
   Status:
-  - Completed as `skills/codex-handoff-packet/SKILL.md`, `workflows/claude-to-codex-handoff.md`, and `examples/claude-to-codex-handoff.md`.
+  - Completed as `codex-handoff-packet/SKILL.md`, `workflows/claude-to-codex-handoff.md`, and `examples/claude-to-codex-handoff.md`.
 
 - Evaluate whether completed-work shipping needs a dedicated skill.
 

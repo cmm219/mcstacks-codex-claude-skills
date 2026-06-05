@@ -6,11 +6,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$source = Join-Path $repoRoot "skills"
-
-if (-not (Test-Path -LiteralPath $source)) {
-    throw "Cannot find skills directory: $source"
-}
+$source = $repoRoot
 
 if (-not $Destination) {
     if ($env:CODEX_HOME) {
@@ -23,7 +19,15 @@ if (-not $Destination) {
 
 New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
-Get-ChildItem -LiteralPath $source -Directory | ForEach-Object {
+$skillDirs = Get-ChildItem -LiteralPath $source -Directory | Where-Object {
+    Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md")
+}
+
+if (-not $skillDirs) {
+    throw "No root-level skill directories found in: $source"
+}
+
+$skillDirs | ForEach-Object {
     $target = Join-Path $Destination $_.Name
     if (Test-Path -LiteralPath $target) {
         if (-not $Force) {

@@ -7,7 +7,7 @@ This repo publishes the public McStacks agent stack: Codex skills, public-safe b
 - GitHub: https://github.com/cmm219/mcstacks-codex-claude-skills
 - Current release line: v0.3.x
 - Public structure:
-  - `skills/`: installable Codex skills.
+  - root-level directories with `SKILL.md`: installable Codex skills.
   - `brain/`: public-safe memory routing templates and privacy guidance.
   - `workflows/`: reusable process loops.
   - `agents/`: role boundaries and handoff contracts.
