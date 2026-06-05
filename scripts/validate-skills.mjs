@@ -3,8 +3,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const skillsDir = join(root, "skills");
-const dirs = await readdir(skillsDir);
+const dirs = await readdir(root);
 const errors = [];
 // Construct this pattern without spelling the full path so broad privacy scans do not flag the validator itself.
 const windowsUserPath = new RegExp("C:" + String.fromCharCode(92, 92) + String.fromCharCode(85, 115, 101, 114, 115) + String.fromCharCode(92, 92));
@@ -28,7 +27,7 @@ async function walkFiles(dir) {
 }
 
 for (const dir of dirs) {
-  const full = join(skillsDir, dir);
+  const full = join(root, dir);
   if (!(await stat(full)).isDirectory()) continue;
 
   const skillPath = join(full, "SKILL.md");
@@ -36,7 +35,6 @@ for (const dir of dirs) {
   try {
     text = await readFile(skillPath, "utf8");
   } catch {
-    errors.push(`${dir}: missing SKILL.md`);
     continue;
   }
 

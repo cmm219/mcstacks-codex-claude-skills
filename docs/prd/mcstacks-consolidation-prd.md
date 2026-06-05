@@ -13,7 +13,7 @@ visibility: public-safe
 
 McStacks is the public home for the agent stack:
 
-- `skills/` contains six installable Codex skills.
+- Root-level `*/SKILL.md` folders contain the installable Codex skills.
 - `brain/` contains public-safe local-first brain guidance and templates.
 - `workflows/` contains initial workflow docs.
 - `agents/` describes role boundaries.
@@ -36,7 +36,7 @@ The public stack is useful but incomplete:
 
 - McStacks does not yet show the whole public-safe stack in a polished way.
 - Some reusable setup and workflow concepts still live in private local notes or superseded public material.
-- The latest `claude-readonly-review` improvement has not been fully reconciled into the public `skills/` folder.
+- The latest `claude-readonly-review` improvement has not been fully reconciled into the public skill folder.
 - There is no public inventory explaining which local skills are publishable, private, or candidates for generic public templates.
 - Duplicate public repo presence can make the project story less clear.
 
@@ -128,7 +128,7 @@ Done when:
 ### Flow 3: Latest `claude-readonly-review` Update
 
 1. Read the private exported source file as reference.
-2. Copy/adapt the relevant content into `skills/claude-readonly-review/SKILL.md`.
+2. Copy/adapt the relevant content into `claude-readonly-review/SKILL.md`.
 3. Remove or generalize private paths and local-only assumptions.
 4. Preserve public CLI resolution:
    - `CLAUDE_CLI_PATH`

@@ -40,13 +40,13 @@ Use prd-review-loop to turn this feature idea into a scored PRD before implement
 Use prd-ship-loop to execute this approved task list and keep going through verification until the approved scope is complete.
 ```
 
-The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is set, otherwise into `~/.codex/skills`.
+The installer copies each root-level directory that contains a `SKILL.md` into `$CODEX_HOME/skills` when `CODEX_HOME` is set, otherwise into `~/.codex/skills`.
 
 ## Stack Layout
 
 | Area | Folder | Purpose |
 | --- | --- | --- |
-| Skills | [`skills/`](skills/) | Installable Codex skills that activate specific workflows. |
+| Skills | root-level `*/SKILL.md` folders | Installable Codex skills that activate specific workflows. |
 | Brain | [`brain/`](brain/) | Public-safe memory routing patterns, templates, and privacy rules. |
 | Workflows | [`workflows/`](workflows/) | Human-readable operating loops that connect skills into repeatable processes. |
 | Agents | [`agents/`](agents/) | Role boundaries for Codex, Claude, and shared handoffs. |
@@ -57,13 +57,13 @@ The installer copies `skills/*` into `$CODEX_HOME/skills` when `CODEX_HOME` is s
 
 This repository currently includes these installable Codex skills:
 
-- `claude-readonly-review`: ask Claude Code for a second-opinion review or implementation plan without allowing writes.
-- `claude-design-html`: use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
-- `claude-design-loop`: run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
-- `codex-handoff-packet`: turn a Claude-originated request into a bounded handoff packet that Codex verifies before acting.
-- `pr-batching`: decide whether related work should ship as one PR, stacked PRs, or separate PRs.
-- `prd-review-loop`: draft, score, review, and iterate PRDs before design or implementation.
-- `prd-ship-loop`: execute an approved PRD or task list through implementation, review, PRs, checks, and smoke QA without routine soft-stops.
+- [`claude-readonly-review`](claude-readonly-review/): ask Claude Code for a second-opinion review or implementation plan without allowing writes.
+- [`claude-design-html`](claude-design-html/): use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
+- [`claude-design-loop`](claude-design-loop/): run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
+- [`codex-handoff-packet`](codex-handoff-packet/): turn a Claude-originated request into a bounded handoff packet that Codex verifies before acting.
+- [`pr-batching`](pr-batching/): decide whether related work should ship as one PR, stacked PRs, or separate PRs.
+- [`prd-review-loop`](prd-review-loop/): draft, score, review, and iterate PRDs before design or implementation.
+- [`prd-ship-loop`](prd-ship-loop/): execute an approved PRD or task list through implementation, review, PRs, checks, and smoke QA without routine soft-stops.
 
 `prd-ship-loop` is intentionally batch-oriented. A clear ship token such as "ship it", "merge when green", "finish this PRD", or "keep going until deployed" can authorize multiple PRs inside the same approved PRD or task list. It should still stop for secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, conflicting instructions, or completed scope.
 

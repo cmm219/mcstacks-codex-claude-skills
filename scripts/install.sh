@@ -2,7 +2,7 @@
 set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source_dir="$repo_root/skills"
+source_dir="$repo_root"
 force=0
 
 for arg in "$@"; do
@@ -16,11 +16,6 @@ for arg in "$@"; do
   esac
 done
 
-if [[ ! -d "$source_dir" ]]; then
-  echo "Cannot find skills directory: $source_dir" >&2
-  exit 1
-fi
-
 if [[ -n "${CODEX_HOME:-}" ]]; then
   dest="$CODEX_HOME/skills"
 else
@@ -29,8 +24,11 @@ fi
 
 mkdir -p "$dest"
 
+found=0
 for skill in "$source_dir"/*; do
   [[ -d "$skill" ]] || continue
+  [[ -f "$skill/SKILL.md" ]] || continue
+  found=1
   name="$(basename "$skill")"
   if [[ -e "$dest/$name" ]]; then
     if [[ "$force" != "1" ]]; then
@@ -42,6 +40,11 @@ for skill in "$source_dir"/*; do
   cp -R "$skill" "$dest/$name"
   echo "Installed $name -> $dest/$name"
 done
+
+if [[ "$found" != "1" ]]; then
+  echo "No root-level skill directories found in: $source_dir" >&2
+  exit 1
+fi
 
 echo
 echo "Done. Run ./scripts/preflight.sh to verify Claude/Codex paths."
