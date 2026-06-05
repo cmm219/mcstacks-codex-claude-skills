@@ -73,7 +73,9 @@ $manifest = [ordered]@{
         }
     })
 }
-$manifest | ConvertTo-Json -Depth 5 | Set-Content -Path (Join-Path $manifestDir "manifest.json") -Encoding UTF8
+$manifestJson = $manifest | ConvertTo-Json -Depth 5
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText((Join-Path $manifestDir "manifest.json"), "$manifestJson`n", $utf8NoBom)
 
 Write-Output ""
 Write-Output "Done. Run scripts\preflight.ps1 to verify Claude/Codex paths."

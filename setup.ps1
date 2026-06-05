@@ -23,7 +23,18 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-& powershell -ExecutionPolicy Bypass -File $preflight
-if ($LASTEXITCODE -ne 0) {
-    exit $LASTEXITCODE
+$previousCodexHome = $env:CODEX_HOME
+$previousCodexSkillsDir = $env:CODEX_SKILLS_DIR
+try {
+    if ($Destination) {
+        $env:CODEX_SKILLS_DIR = [System.IO.Path]::GetFullPath($Destination)
+    }
+
+    & powershell -ExecutionPolicy Bypass -File $preflight
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
+} finally {
+    $env:CODEX_HOME = $previousCodexHome
+    $env:CODEX_SKILLS_DIR = $previousCodexSkillsDir
 }

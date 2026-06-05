@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 - 2026-06-05
+
+- Write the Windows install manifest as UTF-8 without a BOM so Node-based upgrade parsing works after `setup.ps1`.
+- Make `setup.ps1 -Destination` run preflight against the same target Codex home used for installation.
+- Allow preflight to respect `CODEX_SKILLS_DIR` when verifying a direct skills-directory install target.
+
 ## 0.4.0 - 2026-06-05
 
 - Rework the README into a product-first McStacks surface with audience, quick start, workflow loop, skill table, and see-it-work example.

@@ -23,7 +23,9 @@ find_claude() {
   return 1
 }
 
-if [[ -n "${CODEX_HOME:-}" ]]; then
+if [[ -n "${CODEX_SKILLS_DIR:-}" ]]; then
+  codex_skills="$CODEX_SKILLS_DIR"
+elif [[ -n "${CODEX_HOME:-}" ]]; then
   codex_skills="$CODEX_HOME/skills"
 else
   codex_skills="$HOME/.codex/skills"
