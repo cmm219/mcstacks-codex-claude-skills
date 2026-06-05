@@ -11,6 +11,8 @@
 - Refreshed `claude-readonly-review` from the latest public-safe local update, including packet transport, retention, and batch review guidance.
 - Moved installable skills to root-level `*/SKILL.md` folders so GitHub shows the skill code first.
 - Added the GStack GitHub presentation reference as a durable McStacks control note.
+- Reworked README/examples into a product-first public surface with skill table, workflow loop, and copy-paste prompts.
+- Added setup wrappers, install manifest writing, team-mode docs, and manifest-based `mcstacks-upgrade`.
 
 ## Planned
 
@@ -95,4 +97,19 @@
 
   Status:
   - Reference note added.
+  - README/examples/root skill presentation polish implemented.
   - Follow-up remains: compare future README/repo presentation changes against this reference.
+
+- Keep `mcstacks-upgrade` aligned with setup behavior.
+
+  Requirements:
+  - Use `.mcstacks/manifest.json` as the installed-skill allowlist.
+  - Back up installed McStacks skill folders before overwrite.
+  - Restore from backup on failure.
+  - Do not delete unrelated skills from the user's Codex skills directory.
+  - Keep upgrade idempotent when already current.
+  - Defer auto-upgrade, telemetry, snooze state, and migrations until there is a concrete need.
+
+  Status:
+  - Initial manifest-based upgrade skill and script implemented.
+  - Follow-up remains: expand only after real install/upgrade usage proves what is missing.

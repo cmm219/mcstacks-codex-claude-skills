@@ -39,5 +39,41 @@ $skillDirs | ForEach-Object {
     Write-Output "Installed $($_.Name) -> $target"
 }
 
+$sourceHead = "unknown"
+$head = (git -C $repoRoot rev-parse HEAD 2>$null)
+if ($LASTEXITCODE -eq 0 -and $head) { $sourceHead = $head.Trim() }
+
+$sourceRemote = "https://github.com/cmm219/mcstacks-codex-claude-skills.git"
+$remote = (git -C $repoRoot remote get-url origin 2>$null)
+if ($LASTEXITCODE -eq 0 -and $remote) { $sourceRemote = $remote.Trim() }
+
+$version = "unknown"
+$changelog = Join-Path $repoRoot "CHANGELOG.md"
+if (Test-Path -LiteralPath $changelog) {
+    $versionLine = Get-Content -Path $changelog | Where-Object { $_ -match '^##\s+([0-9]+\.[0-9]+\.[0-9]+)' } | Select-Object -First 1
+    if ($versionLine -match '^##\s+([0-9]+\.[0-9]+\.[0-9]+)') { $version = $Matches[1] }
+}
+
+$manifestDir = Join-Path $Destination ".mcstacks"
+New-Item -ItemType Directory -Path $manifestDir -Force | Out-Null
+$manifest = [ordered]@{
+    schemaVersion = 1
+    name = "mcstacks"
+    version = $version
+    installedAtUtc = (Get-Date).ToUniversalTime().ToString("o")
+    installType = "repo-root"
+    sourcePath = $repoRoot
+    sourceRemote = $sourceRemote
+    sourceHead = $sourceHead
+    destination = $Destination
+    skills = @($skillDirs | ForEach-Object {
+        [ordered]@{
+            name = $_.Name
+            installedPath = (Join-Path $Destination $_.Name)
+        }
+    })
+}
+$manifest | ConvertTo-Json -Depth 5 | Set-Content -Path (Join-Path $manifestDir "manifest.json") -Encoding UTF8
+
 Write-Output ""
 Write-Output "Done. Run scripts\preflight.ps1 to verify Claude/Codex paths."

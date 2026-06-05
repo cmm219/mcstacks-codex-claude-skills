@@ -33,6 +33,8 @@ Every serious project should start with:
 7. Add PR/worktree isolation only when concurrent or risky work requires it.
 8. Run the scaffold checks available for the project.
 
+For shared repo adoption, see [`team-mode.md`](team-mode.md).
+
 ## Copy The Public Templates
 
 Use the files in [`../brain/templates/`](../brain/templates/) as the public-safe skeleton. Copy the shape, then replace placeholders with the new project's values.

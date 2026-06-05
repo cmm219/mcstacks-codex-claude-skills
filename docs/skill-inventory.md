@@ -21,6 +21,7 @@ McStacks does not publish private project names, private local paths, live-syste
 | `claude-design-html` | `claude-design-html/` | `publish` | Reusable design partner workflow with Codex review boundary. | Continue validating public-safe examples. |
 | `claude-design-loop` | `claude-design-loop/` | `publish` | Reusable gated design artifact workflow. | Continue validating public-safe examples. |
 | `codex-handoff-packet` | `codex-handoff-packet/` | `publish` | Reverse handoff pattern for Claude-originated requests while preserving Codex-owned repo authority. | Validate against real handoff usage. |
+| `mcstacks-upgrade` | `mcstacks-upgrade/` | `publish` | Manifest-based local upgrade workflow for installed McStacks skills. | Keep upgrade tests aligned with setup wrappers. |
 | `pr-batching` | `pr-batching/` | `publish` | General PR-scope decision framework. | None. |
 | `prd-review-loop` | `prd-review-loop/` | `publish` | General PRD creation/review workflow. | None. |
 | `prd-ship-loop` | `prd-ship-loop/` | `publish` | General approved-scope shipping workflow. | None. |
