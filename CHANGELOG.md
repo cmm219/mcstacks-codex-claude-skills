@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 - 2026-06-05
+
+- Rework the README into a product-first McStacks surface with audience, quick start, workflow loop, skill table, and see-it-work example.
+- Add `examples/README.md` for first-use prompts and example routing.
+- Add root setup wrappers for Windows and macOS/Linux.
+- Write a local `.mcstacks/manifest.json` during install so future upgrades can use an allowlist instead of guessing ownership.
+- Add `mcstacks-upgrade` and `scripts/mcstacks-upgrade.mjs` for manifest-based upgrade, backup, preflight, and changelog summary.
+- Add team/project setup documentation for public-safe adoption in other repos.
+
 ## 0.3.2 - 2026-06-04
 
 - Add McStacks consolidation PRD, skill inventory, serious-project setup docs, setup modules, workflow pages, and brain templates.

@@ -1,10 +1,17 @@
 # McStacks
 
-McStacks is a public agent stack for local AI-assisted software work. It gives Codex a repeatable way to use Claude Code for review, planning, design, PRD loops, and shipping discipline while Codex stays in charge of the repo, QA, and merge.
+McStacks is a public Codex workflow stack for people who want local AI-assisted software work to be reviewable, repeatable, and safe to ship.
 
-The core idea is simple: one agent owns the working tree, every other model is treated as review input until verified, and reusable workflow memory is packaged as public-safe structure instead of private notes.
+Codex owns the repo, working tree, QA, PRs, and shipping decisions. Claude is brought in as review input: read-only reviewer, planning challenger, scoped design partner, or structured handoff author. The result is a practical stack for moving from rough scope to verified PR without letting model output become authority.
 
-## Start Here
+## Who This Is For
+
+- Builders using Codex who want a stronger review and shipping loop.
+- Small teams that need public-safe project setup, local knowledge routing, and explicit agent boundaries.
+- Engineers who want Claude involved without giving it uncontrolled repo authority.
+- Projects where correctness, privacy, release notes, and verification matter.
+
+## Quick Start
 
 Clone the repo, install the skills, then run preflight.
 
@@ -13,8 +20,7 @@ Windows PowerShell:
 ```powershell
 git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
 cd mcstacks-codex-claude-skills
-powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\preflight.ps1
+powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
 macOS / Linux:
@@ -22,8 +28,7 @@ macOS / Linux:
 ```bash
 git clone https://github.com/cmm219/mcstacks-codex-claude-skills.git
 cd mcstacks-codex-claude-skills
-bash scripts/install.sh
-bash scripts/preflight.sh
+bash setup.sh
 ```
 
 After install, try these prompts in Codex:
@@ -40,7 +45,72 @@ Use prd-review-loop to turn this feature idea into a scored PRD before implement
 Use prd-ship-loop to execute this approved task list and keep going through verification until the approved scope is complete.
 ```
 
-The installer copies each root-level directory that contains a `SKILL.md` into `$CODEX_HOME/skills` when `CODEX_HOME` is set, otherwise into `~/.codex/skills`.
+```text
+Use codex-handoff-packet to evaluate this Claude handoff and decide whether Codex should implement it.
+```
+
+The setup wrappers install each root-level directory that contains a `SKILL.md`, run preflight, and write a local McStacks install manifest under the Codex skills directory. Set `CODEX_HOME` to choose a non-default install root. Re-run with `-Force` on Windows or `--force` on macOS/Linux to overwrite an existing McStacks skill install.
+
+## Who This Is Not For
+
+- People looking for a hosted service or model router.
+- Teams that want autonomous deploys or risky actions without human approval.
+- Users who want to vendor private notes, secrets, project transcripts, or third-party skill bodies.
+- Workflows where Claude should own git, PRs, deploys, or final engineering judgment.
+
+## See It Work
+
+```text
+You: Use prd-review-loop to turn this rough feature idea into a scored PRD before implementation.
+
+Codex: drafts requirements, names goals/non-goals, defines verification, and asks Claude for read-only review when useful.
+
+You: Approved. Use pr-batching to decide the PR shape.
+
+Codex: recommends one PR, stacked PRs, or separate PRs based on risk and verification boundaries.
+
+You: Use prd-ship-loop to execute the approved scope and merge when green.
+
+Codex: branches, implements, runs checks, asks Claude to review the final diff and QA evidence, opens the PR, waits for checks, merges when authorized, and reports what shipped.
+```
+
+## The McStacks Loop
+
+```text
+Scope -> Review -> Implement -> Verify -> Ship -> Capture
+```
+
+- Scope: define the approved work, risk boundary, and stop gates.
+- Review: use Claude as read-only review or planning input before risky implementation.
+- Implement: Codex owns edits, repo state, and integration decisions.
+- Verify: run relevant checks, QA, smoke tests, and second-pass review.
+- Ship: use the repo's PR, merge, deploy, and smoke workflow when authorized.
+- Capture: record public-safe templates, follow-ups, and durable lessons.
+
+## Skills
+
+| Skill | What it does | When to use |
+| --- | --- | --- |
+| [`claude-readonly-review`](claude-readonly-review/) | Sends scoped plans, diffs, or QA evidence to Claude for read-only review while Codex owns all repo actions. | You want a second model to challenge a plan, diff, or risky change before Codex acts. |
+| [`claude-design-html`](claude-design-html/) | Uses Claude as a scoped frontend design partner, then has Codex review, integrate, and verify the result. | You need visual/design polish but want Codex to keep integration control. |
+| [`claude-design-loop`](claude-design-loop/) | Runs a gated design artifact loop before app implementation begins. | UI work needs artifact approval before code changes. |
+| [`codex-handoff-packet`](codex-handoff-packet/) | Converts a Claude-originated request into a bounded packet Codex can verify before acting. | Claude has proposed work, but Codex must check scope, evidence, and permissions first. |
+| [`mcstacks-upgrade`](mcstacks-upgrade/) | Updates installed McStacks skills from a verified source using the install manifest allowlist. | You installed McStacks earlier and want to refresh the local skills safely. |
+| [`pr-batching`](pr-batching/) | Decides whether related work should ship as one PR, stacked PRs, or separate PRs. | Review or rollback shape is unclear. |
+| [`prd-review-loop`](prd-review-loop/) | Drafts, scores, reviews, and iterates PRDs before design or implementation. | A rough idea needs requirements before build work. |
+| [`prd-ship-loop`](prd-ship-loop/) | Executes an approved PRD, task list, issue, or explicit scope through implementation, checks, PRs, and smoke QA. | The scope is approved and Codex should keep moving through routine verification. |
+
+`prd-ship-loop` is intentionally batch-oriented. A clear ship token such as "ship it", "merge when green", "finish this PRD", or "keep going until deployed" can authorize multiple PRs inside the same approved PRD or task list. It should still stop for secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, conflicting instructions, or completed scope.
+
+## Examples
+
+Start with [`examples/README.md`](examples/README.md), then open the example that matches the workflow:
+
+- [`examples/readonly-review.md`](examples/readonly-review.md)
+- [`examples/design-html.md`](examples/design-html.md)
+- [`examples/claude-to-codex-handoff.md`](examples/claude-to-codex-handoff.md)
+- [`examples/prd-to-ship.md`](examples/prd-to-ship.md)
+- [`examples/ship-completed-work.md`](examples/ship-completed-work.md)
 
 ## Stack Layout
 
@@ -50,40 +120,12 @@ The installer copies each root-level directory that contains a `SKILL.md` into `
 | Brain | [`brain/`](brain/) | Public-safe memory routing patterns, templates, and privacy rules. |
 | Workflows | [`workflows/`](workflows/) | Human-readable operating loops that connect skills into repeatable processes. |
 | Agents | [`agents/`](agents/) | Role boundaries for Codex, Claude, and shared handoffs. |
-| Scripts | [`scripts/`](scripts/) | Install, preflight, and validation helpers. |
+| Scripts | [`scripts/`](scripts/) | Install, preflight, validation, and upgrade helpers. |
 | Examples | [`examples/`](examples/) | Copy-paste usage examples for common workflows. |
 | Docs | [`docs/`](docs/) | Safety model, troubleshooting, and repo structure guidance. |
 | Tasks | [`TASKS.md`](TASKS.md) | Public roadmap items and follow-up work. |
 
-This repository currently includes these installable Codex skills:
-
-- [`claude-readonly-review`](claude-readonly-review/): ask Claude Code for a second-opinion review or implementation plan without allowing writes.
-- [`claude-design-html`](claude-design-html/): use Claude Code as a scoped frontend design partner, then have Codex review, integrate, and verify the result.
-- [`claude-design-loop`](claude-design-loop/): run the full gated loop: Claude design artifact, Codex review, user approval, app implementation, Codex QA, final user approval.
-- [`codex-handoff-packet`](codex-handoff-packet/): turn a Claude-originated request into a bounded handoff packet that Codex verifies before acting.
-- [`pr-batching`](pr-batching/): decide whether related work should ship as one PR, stacked PRs, or separate PRs.
-- [`prd-review-loop`](prd-review-loop/): draft, score, review, and iterate PRDs before design or implementation.
-- [`prd-ship-loop`](prd-ship-loop/): execute an approved PRD or task list through implementation, review, PRs, checks, and smoke QA without routine soft-stops.
-
-`prd-ship-loop` is intentionally batch-oriented. A clear ship token such as "ship it", "merge when green", "finish this PRD", or "keep going until deployed" can authorize multiple PRs inside the same approved PRD or task list. It should still stop for secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, conflicting instructions, or completed scope.
-
 These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows that load skills from a Codex skills directory such as `$CODEX_HOME/skills` or `~/.codex/skills`.
-
-## Which Skill Should I Use?
-
-| Need | Use | What Happens |
-| --- | --- | --- |
-| Second opinion on a diff or plan | `claude-readonly-review` | Codex sends scoped context to Claude, then verifies findings before editing. |
-| Frontend critique or scoped design polish | `claude-design-html` | Claude helps with visual/design work while Codex owns integration and QA. |
-| Artifact-first UI redesign | `claude-design-loop` | Claude creates a standalone artifact, the user approves it, then app implementation starts. |
-| Claude has a task for Codex | `codex-handoff-packet` | Claude writes a handoff packet; Codex checks scope, risk, and evidence before acting. |
-| Decide PR shape | `pr-batching` | Codex recommends one PR, stacked PRs, or split PRs based on risk and verification. |
-| Turn a rough feature idea into requirements | `prd-review-loop` | Codex drafts/scores a PRD and uses Claude review when useful. |
-| Execute an approved PRD/task list | `prd-ship-loop` | Codex implements, verifies, opens/updates PRs, and continues through approved scope. |
-| Bootstrap a serious project | [`docs/new-project-setup.md`](docs/new-project-setup.md) | McStacks gives the repo control files, startup rules, workflow modules, and review gates. |
-| Decide what parts of the stack are public | [`docs/skill-inventory.md`](docs/skill-inventory.md) | Skills are classified as publishable, generic patterns, private, or follow-up. |
-
-Start small. Use `claude-readonly-review` for a review, `claude-design-loop` for high-impact UI work that needs approval before implementation, and `prd-ship-loop` only after the PRD or task list is approved. See [`workflows/`](workflows/) for how these skills compose into larger loops.
 
 ## Why Codex + Claude?
 
@@ -97,38 +139,6 @@ The boundary is intentional:
 - Claude output is never self-approving. Codex reviews Claude plans, diffs, and rendered UI before accepting them.
 
 The [`brain/`](brain/) folder documents reusable knowledge-routing patterns. It is not a dump of private memory, transcripts, secrets, or project notes.
-
-## Typical Workflows
-
-### Safer Review
-
-1. Ask Codex to use `claude-readonly-review`.
-2. Codex sends Claude a scoped plan and QA plan for approval when implementation work is involved.
-3. Codex implements the approved plan, keeping Claude read-only.
-4. Codex runs the relevant checks, then sends the final diff plus QA results for review.
-5. Codex fixes valid in-scope findings, rejects invalid findings with evidence, and reports only after the loop is approved or a real blocker remains.
-
-### Gated Design
-
-1. Ask for `claude-design-loop`.
-2. Claude creates or revises a standalone design artifact.
-3. Codex reviews the artifact for data fidelity, layout, mobile behavior, and implementation risk.
-4. The user approves the artifact.
-5. Codex ports the approved design into the app and runs browser QA.
-
-### PRD to Shipping
-
-1. Use `prd-review-loop` to make the requirements precise enough to build.
-2. Use `pr-batching` when the work could be one PR, stacked PRs, or split PRs.
-3. Use `prd-ship-loop` only after the scope is approved.
-4. Codex keeps moving through routine verification and stops only for real blockers.
-
-### Claude to Codex Handoff
-
-1. Claude writes a handoff packet instead of trying to operate the repo.
-2. Codex checks the packet for scope, evidence, permissions, risk, and stop conditions.
-3. Codex asks the user or refuses the packet when the request is unsafe, vague, or outside the approved boundary.
-4. Codex executes only verified in-scope work and reports the result.
 
 ## Claude CLI Discovery
 
@@ -191,52 +201,6 @@ Important: content you pass to Claude Code may be sent to Anthropic or to the pr
 
 Claude invocations may consume your Claude Code subscription quota, Anthropic API spend, or alternate provider quota depending on how your local Claude CLI is authenticated. The preflight scripts warn when `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, or `ANTHROPIC_BASE_URL` are set.
 
-## Example Prompts
-
-```text
-Use claude-readonly-review to review my current diff for correctness risks.
-```
-
-```text
-Use claude-readonly-review to help plan this refactor before Codex implements it.
-```
-
-```text
-Use claude-design-html for a read-only visual critique first, then have Codex choose the fixes.
-```
-
-```text
-Use claude-design-html to let Claude implement a scoped frontend polish pass, then have Codex review, QA, and integrate the result.
-```
-
-```text
-Use claude-design-html with my installed local /design-html workflow to generate a design artifact, then have Codex port the accepted design into the real app.
-```
-
-```text
-Use claude-design-loop so Claude generates the HTML artifact first, Codex reviews it, I approve it, then the approved design gets implemented and QA'd.
-```
-
-```text
-Use claude-design-loop with my CLAUDE_DESIGN_CLI wrapper for the artifact and design revisions.
-```
-
-```text
-Use codex-handoff-packet to evaluate this Claude handoff and decide whether Codex should implement it.
-```
-
-```text
-Use prd-review-loop to turn this rough feature idea into a scored PRD before implementation.
-```
-
-```text
-Use pr-batching to decide whether this should be one PR, stacked PRs, or separate PRs.
-```
-
-```text
-Use prd-ship-loop to execute this approved PRD and keep going through verification until the approved scope is complete.
-```
-
 ## Safety Model
 
 Files Claude reads are untrusted input. Claude output is also untrusted input. Codex is the trust boundary.
@@ -267,13 +231,13 @@ node scripts/validate-skills.mjs
 Remove the installed skill folders from your Codex skills directory:
 
 ```bash
-rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/codex-handoff-packet ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop
+rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/codex-handoff-packet ~/.codex/skills/mcstacks-upgrade ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop ~/.codex/skills/.mcstacks
 ```
 
 Windows PowerShell:
 
 ```powershell
-Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\codex-handoff-packet","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop" -Recurse -Force
+Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\codex-handoff-packet","$HOME\.codex\skills\mcstacks-upgrade","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop","$HOME\.codex\skills\.mcstacks" -Recurse -Force
 ```
 
 ## FAQ
@@ -299,7 +263,6 @@ No. This project is not affiliated with, endorsed by, or sponsored by OpenAI or 
 - Not a Claude SDK.
 - Not a hosted service.
 - Not a model router.
-- Not a GStack wrapper, clone, or redistribution channel.
 - Not a vendor or redistribution package for third-party Claude skills.
 - Not a replacement for Codex or Claude Code.
 - Not an automation system that bypasses human approval for risky actions.

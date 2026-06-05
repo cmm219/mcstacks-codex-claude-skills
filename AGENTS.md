@@ -11,11 +11,14 @@ This repo publishes the public McStacks agent stack: Codex skills, public-safe b
   - `brain/`: public-safe memory routing templates and privacy guidance.
   - `workflows/`: reusable process loops.
   - `agents/`: role boundaries and handoff contracts.
-  - `scripts/`: install/preflight/validation.
+  - `scripts/`: install/preflight/validation/upgrade helpers.
+  - `setup.ps1` and `setup.sh`: install + preflight wrappers.
 - Skills:
   - `claude-readonly-review`
   - `claude-design-html`
   - `claude-design-loop`
+  - `codex-handoff-packet`
+  - `mcstacks-upgrade`
   - `pr-batching`
   - `prd-review-loop`
   - `prd-ship-loop`
@@ -68,6 +71,8 @@ For shell-script changes, also run when feasible:
 ```bash
 bash scripts/preflight.sh
 ```
+
+For setup/install/upgrade changes, also run isolated `CODEX_HOME` smoke tests against `setup.ps1`, `setup.sh`, and `scripts/mcstacks-upgrade.mjs`.
 
 ## Publishing
 

@@ -11,10 +11,13 @@ mcstacks/
   pr-batching/
   prd-review-loop/
   prd-ship-loop/
+  mcstacks-upgrade/
   brain/
   workflows/
   agents/
   scripts/
+  setup.ps1
+  setup.sh
   examples/
   docs/
 ```
@@ -41,7 +44,7 @@ Role boundaries and handoff contracts for Codex, Claude, and the user.
 
 ## `scripts/`
 
-Install, preflight, and validation helpers.
+Install, preflight, validation, and upgrade helpers. Root `setup.ps1` and `setup.sh` call these scripts for the common install path.
 
 ## `examples/`
 
@@ -54,6 +57,7 @@ Safety model, troubleshooting, and repository structure documentation.
 Key docs:
 
 - `new-project-setup.md` — serious-project bootstrap flow.
+- `team-mode.md` — repo/team adoption guidance without vendoring private memory.
 - `setup-modules.md` — optional setup modules by risk.
 - `skill-inventory.md` — public-safe skill classification.
 
