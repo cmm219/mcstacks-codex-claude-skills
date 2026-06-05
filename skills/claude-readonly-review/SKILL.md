@@ -66,6 +66,8 @@ User interruption overrides the loop. If the user says stop, pause, review only,
 
 Keep loops bounded. After five review iterations on the same gate without approval, stop and show the user the remaining disagreement unless the next fix is obvious, low risk, and still inside the approved scope. The soft cap does not mean Claude wins; Codex may reject a finding with code, test, documentation, or user-constraint evidence.
 
+Do not loop forever on wording preferences or optional ideas. Treat only required changes, blockers, safety issues, implementation-risk findings, and QA-adequacy gaps as loop blockers. Record low-severity or out-of-scope suggestions as follow-ups and keep moving.
+
 ## Prompt Templates
 
 Plan gate:
@@ -93,8 +95,35 @@ Diff/QA gate:
 
 ```powershell
 $claude = if ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
-git diff | & $claude --permission-mode plan --tools "" --model opus -p "You are reviewing a final Codex diff and QA evidence. Do not edit files. Do not run commands. Return one verdict: APPROVED if implementation and QA are sufficient; APPROVED WITH CHANGES if the work is acceptable only after listed in-scope fixes; BLOCKED if there is a blocker, unsafe ambiguity, or missing required QA. Include actionable findings ordered by severity with file/line references."
+Get-Content -Raw .\artifacts\claude-packets\YYYY-MM-DD-<slug>\diff-review.md |
+  & $claude --permission-mode plan --tools "" --model opus -p
 ```
+
+## Large Prompt Handling
+
+For any Claude prompt longer than roughly 30 words, create a Markdown packet file first and pipe that file to Claude. Do not send long inline `-p` strings.
+
+The packet must contain the actual review question and the relevant context or diff content needed for the review. Do not rely on a prompt that merely points Claude at other files unless the packet is intentionally too large and is being processed chunk-by-chunk.
+
+Avoid giant inline PowerShell here-strings for large reviews. They are fragile because shell quoting, terminal buffers, command-line limits, and local timeouts can fail before Claude has a chance to answer. In particular, do not interpolate raw `git diff` output inside a PowerShell here-string. Build packet files in pieces instead: write the Markdown header, append diff/context output, then append closing fences.
+
+Default transport rules:
+
+1. **Small prompt**: inline `-p` is allowed only for very short checks, about 30 words or fewer, such as a Claude CLI health check. If in doubt, use a Markdown packet.
+2. **Medium prompt or diff**: write a Markdown review packet file containing the full review question and embedded relevant diff/context, then pipe the file into Claude:
+
+   ```powershell
+   $claude = if ($env:CLAUDE_CLI_PATH) { $env:CLAUDE_CLI_PATH } else { "claude" }
+   $packet = ".\artifacts\claude-packets\2026-06-05-example\review.md"
+   Set-Content -Path $packet -Value "# Claude Review`n`nReview this diff read-only. Do not edit files.`n`n```diff"
+   git diff -- path\to\file.ts path\to\file.test.ts | Add-Content -Path $packet
+   Add-Content -Path $packet -Value "```"
+   Get-Content -Raw $packet | & $claude --permission-mode plan --tools "" --model opus -p
+   ```
+
+3. **Large prompt, transcript, log bundle, or broad diff**: create a review packet directory under a gitignored or generated location such as `artifacts/claude-packets/<batch>/`. Prefer a single embedded review packet when the context is reasonably sized. Use `context/...` chunks only when embedding everything would be too large.
+4. **Very large or unbounded prompt**: chunk intentionally. Review chunks for findings, dedupe findings, then run a final synthesis packet that includes Claude's chunk findings, Codex's decisions, and the final approval question.
+5. **Timeout recovery**: if Claude times out, first run a tiny Markdown-backed health check to distinguish Claude CLI/session health from packet size. Then retry once with a longer timeout and a smaller single-file packet. If it times out again, split the packet and continue chunk-by-chunk. Treat timeout as a transport failure, not as a substantive Claude rejection.
 
 ## Session Strategy
 
@@ -118,7 +147,7 @@ If `session_id` is absent, expired, or invalid, rerun the gate without `--resume
 
 ## Packet Workflow
 
-Use inline prompts for small, low-risk checks. For medium, large, high-risk, or multi-round reviews, use a project-local Markdown packet:
+Use inline prompts only for very small, low-risk checks. For medium, large, high-risk, or multi-round reviews, use a project-local Markdown packet:
 
 ```text
 artifacts/claude-packets/YYYY-MM-DD-<slug>/
@@ -148,6 +177,7 @@ Packet rules:
 - Use status tags: `fixed`, `rejected-with-evidence`, `superseded`, `blocked`, `follow-up`.
 - If `HEAD` changes after a diff or context capture, regenerate relevant packet files or note the staleness before asking Claude for approval.
 - A stale packet must not be treated as approval for the current diff.
+- The first prompt in a chunked review must still explain the chunking plan and include the exact approval criteria.
 
 Treat timeouts as transport failures, not Claude rejections. Retry once with a longer timeout and smaller packet; if needed, split the packet into chunks and run a final synthesis approval pass.
 
@@ -175,11 +205,20 @@ Retained responses are opt-in. Gitignore cannot conditionally re-include `respon
 
 Routine merged packets should usually prune heavy `context/` and ignored `responses/` after about 30 days. High-risk, disputed, or blocked packets may retain longer when `manifest.md` or `STATUS.md` states why.
 
+Keep review packets free of secrets, `.env` contents, credentials, unrelated personal data, and live operational artifacts unless the user explicitly asks and the project guardrails allow it.
+
 ## Batch-Level Review
 
 For broad approved PRDs, task lists, production-sensitive changes, or multi-PR batches, use Claude as a batch-level safety gate rather than a per-branch ritual. One plan review can cover the whole approved batch when it names intended slices, risk boundaries, verification, and stop gates.
 
 If Claude identifies scope expansion, unclear requirements, or a material product, security, privacy, architecture, data, money, or production decision, stop and show the user the issue before implementing. If Claude only reports low-severity or out-of-scope suggestions, record them as follow-ups and keep moving.
+
+During an approved multi-PR batch:
+
+- Prefer one initial Claude plan review for the batch plus focused diff reviews for risky slices.
+- Do not stop after each Claude review if findings are fixable inside scope.
+- Do not perform end-of-work control, session, archive, or dashboard updates after every Claude review or PR. Save those for the end of the approved batch or a real handoff.
+- If the next slice introduces materially new risk, changes approved product/data behavior, or hits a real blocker, run a focused new review.
 
 ## High-Risk Plan Gate
 
@@ -205,6 +244,8 @@ If Claude returns required changes, `APPROVED WITH CHANGES`, blocking concerns, 
 
 Stop and ask the user if Claude identifies scope expansion, unclear requirements, or a material product, security, privacy, architecture, data, money, or production decision.
 
+Keep the loop bounded. Do not chase minor wording preferences. Treat only required changes, blockers, safety issues, and implementation-risk findings as loop blockers.
+
 ## High-Risk QA Gate
 
 For high-risk work, Codex runs planned verification before asking Claude to review the final diff. Send Claude:
@@ -218,6 +259,8 @@ For high-risk work, Codex runs planned verification before asking Claude to revi
 If Claude finds required implementation or QA gaps that are in scope, Codex fixes them, reruns relevant verification, and reruns Claude review. If Claude requests broader product decisions, live sends, production data writes, destructive operations, or scope expansion, stop and present the issue to the user.
 
 For repeated non-converging review loops, use the five-iteration soft cap from the default approval loop. The cap does not mean Claude wins by default; Codex owns the final engineering call and must document evidence for any rejected finding.
+
+Present the plan, implementation summary, and QA evidence to the user only after the plan loop and post-implementation QA/diff loop are approved, or after Codex explicitly documents a defensible rejection.
 
 ## Handling Results
 
