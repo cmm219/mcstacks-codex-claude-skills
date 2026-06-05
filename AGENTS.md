@@ -20,6 +20,17 @@ This repo publishes the public McStacks agent stack: Codex skills, public-safe b
   - `prd-review-loop`
   - `prd-ship-loop`
 
+## GitHub Presentation Reference
+
+Use Garry Tan's GStack repo as the public presentation reference for McStacks:
+
+- GStack: https://github.com/garrytan/gstack
+- McStacks reference doc: `docs/gstack-presentation-reference.md`
+
+The goal is to adapt the GitHub presentation pattern: root-level skill folders, install-first README, obvious quickstart, visible workflow examples, and docs that support the product instead of hiding the skill code. Do not copy GStack's skill bodies, brand, or private assumptions. McStacks remains a Codex-owned repo workflow stack with Claude as review, planning, design, and handoff input.
+
+For larger public presentation changes, use `claude-readonly-review` or another second-model review and ask it to compare the result against the GStack presentation reference.
+
 ## Core Boundary
 
 - Codex owns repo state, integration, QA, commits, pushes, PRs, releases, and final judgment.

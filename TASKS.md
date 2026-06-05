@@ -10,6 +10,7 @@
 - Wired public brain templates into new-project setup docs and added completed-work shipping guidance.
 - Refreshed `claude-readonly-review` from the latest public-safe local update, including packet transport, retention, and batch review guidance.
 - Moved installable skills to root-level `*/SKILL.md` folders so GitHub shows the skill code first.
+- Added the GStack GitHub presentation reference as a durable McStacks control note.
 
 ## Planned
 
@@ -77,3 +78,21 @@
   Status:
   - Workflow guidance added.
   - Dedicated skill deferred.
+
+- Keep polishing McStacks against the GStack GitHub presentation reference.
+
+  Reference:
+  - `docs/gstack-presentation-reference.md`
+  - https://github.com/garrytan/gstack
+
+  Requirements:
+  - Preserve root-level skill visibility.
+  - Keep install and first-use flow copy-pasteable.
+  - Make README examples show actual workflows, not folder descriptions.
+  - Keep docs supportive of the skills rather than hiding the product.
+  - Do not copy, vendor, wrap, or redistribute GStack skill bodies or branding.
+  - Use Claude read-only review or another second-model review for larger public-presentation changes.
+
+  Status:
+  - Reference note added.
+  - Follow-up remains: compare future README/repo presentation changes against this reference.
