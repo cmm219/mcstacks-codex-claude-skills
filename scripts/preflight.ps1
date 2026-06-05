@@ -25,7 +25,9 @@ function Find-Claude {
     return $null
 }
 
-$codexSkills = if ($env:CODEX_HOME) {
+$codexSkills = if ($env:CODEX_SKILLS_DIR) {
+    $env:CODEX_SKILLS_DIR
+} elseif ($env:CODEX_HOME) {
     Join-Path $env:CODEX_HOME "skills"
 } else {
     $homeDir = if ($env:USERPROFILE) { $env:USERPROFILE } else { $HOME }
