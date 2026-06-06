@@ -1,0 +1,27 @@
+# Runtime Registry
+
+Canonical machine-readable registry: `bots.json`.
+
+Every independently runnable app, bot, worker, script entrypoint, or live process
+variant must be registered there before use. The registry is the source of truth
+for runtime id/name, entrypoint path, notes paths, backlog path, session path,
+and expected artifact names.
+
+## Registered Runtimes
+
+| Runtime id | Name | Runtime path | Notes scope |
+| --- | --- | --- | --- |
+| `<RUNTIME_ID>` | <HUMAN_RUNTIME_NAME> | `<RELATIVE_ENTRYPOINT_OR_APP_PATH>` | `<NOTES_VAULT_PATH>/projects/<PROJECT_NAME>` |
+
+## Audit Tokens
+
+- Use ISO-8601 local timestamps with offset, for example `2026-05-22T00:45:00-04:00`.
+- Use `runtime: not-launched` when no process was started.
+- Use `runtime: dry-run`, `runtime: watch-only`, `runtime: local`, `runtime: staging`, or `runtime: production` only when that runtime actually ran.
+- Version/session entries must include runtime id, command, cwd, key env/deploy/live flags, and verification, or explicitly say `runtime: not-launched`.
+
+## Artifact Globs
+
+Keep artifact globs specific to this runtime when possible. Replace
+`<PROJECT_SPECIFIC_ARTIFACT_GLOB>` before first use, or remove the artifact entry
+when the runtime has no durable logs/ledgers/reports yet.

@@ -34,6 +34,8 @@ Every serious project should start with:
 8. Run the scaffold checks available for the project.
 
 For shared repo adoption, see [`team-mode.md`](team-mode.md).
+For projects that need local audit scripts, runtime registries, and release
+version checks, see [`project-control-scripts.md`](project-control-scripts.md).
 
 ## Copy The Public Templates
 
@@ -50,6 +52,11 @@ Suggested mapping:
 | [`brain/templates/backlog.md`](../brain/templates/backlog.md) | `tasks/backlog.md` |
 | [`brain/templates/review-packet.md`](../brain/templates/review-packet.md) | `tasks/audits/<topic>-review.md` |
 | [`brain/templates/project-memory.md`](../brain/templates/project-memory.md) | project memory starter |
+
+Optional control-and-release scripts live in
+[`brain/templates/project-control/`](../brain/templates/project-control/). Use
+them when a project needs repeatable local session logging, runtime registry
+checks, version claiming, and scaffold hygiene checks.
 
 Minimal startup pointer for repo `AGENTS.md`:
 
