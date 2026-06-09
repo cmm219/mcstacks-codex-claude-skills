@@ -49,7 +49,7 @@ command Codex suggests (inspect it first).
 4. Claude evaluates those findings and decides what to change.
 5. Codex does not edit files, run mutating commands, commit, push, deploy, or operate services. `-s read-only` supports the filesystem boundary; the prompt instruction and Claude's inspection of any suggested commands enforce the rest. Do not remove `-s read-only` unless the user explicitly changes the boundary.
 
-This uses the user's signed-in Codex/OpenAI account, not Anthropic tokens.
+This uses the user's Codex/OpenAI auth — ChatGPT sign-in, API key, or whatever provider their codex CLI is configured for — not Anthropic tokens.
 
 ## stdin Transport Rules
 

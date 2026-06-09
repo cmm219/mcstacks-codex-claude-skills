@@ -1,5 +1,7 @@
 # McStacks
 
+Gated review loops for Codex and Claude working together.
+
 McStacks is a public Codex workflow stack for people who want local AI-assisted software work to be reviewable, repeatable, and safe to ship.
 
 Codex owns the repo, working tree, QA, PRs, and shipping decisions. Claude is brought in as review input: read-only reviewer, planning challenger, scoped design partner, or structured handoff author. The result is a practical stack for moving from rough scope to verified PR without letting model output become authority.
@@ -56,10 +58,12 @@ The setup wrappers install each root-level directory that contains a `SKILL.md`,
 One exception: [`codex-readonly-review`](codex-readonly-review/) is a **Claude Code** skill (the mirror direction — Claude drives, Codex reviews), so the setup wrappers skip it. Install it manually into your Claude skills directory:
 
 ```powershell
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
 Copy-Item -Recurse .\codex-readonly-review "$HOME\.claude\skills\codex-readonly-review"
 ```
 
 ```bash
+mkdir -p ~/.claude/skills
 cp -R ./codex-readonly-review ~/.claude/skills/codex-readonly-review
 ```
 
@@ -107,17 +111,26 @@ Scope -> Review -> Implement -> Verify -> Ship -> Capture
 
 ## Skills
 
+Most of the stack is **gated loops** — review rounds that repeat until an explicit verdict — plus a few one-shot tools that support them.
+
+### Gated loops
+
 | Skill | What it does | When to use |
 | --- | --- | --- |
-| [`claude-readonly-review`](claude-readonly-review/) | Sends scoped plans, diffs, or QA evidence to Claude for read-only review while Codex owns all repo actions. | You want a second model to challenge a plan, diff, or risky change before Codex acts. |
+| [`claude-readonly-review`](claude-readonly-review/) | Sends scoped plans, diffs, or QA evidence to Claude for read-only review while Codex owns all repo actions. Loops until approved. | You want a second model to challenge a plan, diff, or risky change before Codex acts. |
 | [`codex-readonly-review`](codex-readonly-review/) | The mirror direction: a **Claude Code** skill that calls the local Codex CLI as a read-only reviewer while Claude owns all repo actions. Installs into the Claude skills directory, not the Codex one. | You drive with Claude Code and want Codex as the second-model reviewer. |
 | [`claude-design-html`](claude-design-html/) | Uses Claude as a scoped frontend design partner, then has Codex review, integrate, and verify the result. | You need visual/design polish but want Codex to keep integration control. |
 | [`claude-design-loop`](claude-design-loop/) | Runs a gated design artifact loop before app implementation begins. | UI work needs artifact approval before code changes. |
+| [`prd-review-loop`](prd-review-loop/) | Drafts, scores, reviews, and iterates PRDs before design or implementation. | A rough idea needs requirements before build work. |
+| [`prd-ship-loop`](prd-ship-loop/) | Executes an approved PRD, task list, issue, or explicit scope through implementation, checks, PRs, and smoke QA. | The scope is approved and Codex should keep moving through routine verification. |
+
+### One-shot tools
+
+| Skill | What it does | When to use |
+| --- | --- | --- |
 | [`codex-handoff-packet`](codex-handoff-packet/) | Converts a Claude-originated request into a bounded packet Codex can verify before acting. | Claude has proposed work, but Codex must check scope, evidence, and permissions first. |
 | [`mcstacks-upgrade`](mcstacks-upgrade/) | Updates installed McStacks skills from a verified source using the install manifest allowlist. | You installed McStacks earlier and want to refresh the local skills safely. |
 | [`pr-batching`](pr-batching/) | Decides whether related work should ship as one PR, stacked PRs, or separate PRs. | Review or rollback shape is unclear. |
-| [`prd-review-loop`](prd-review-loop/) | Drafts, scores, reviews, and iterates PRDs before design or implementation. | A rough idea needs requirements before build work. |
-| [`prd-ship-loop`](prd-ship-loop/) | Executes an approved PRD, task list, issue, or explicit scope through implementation, checks, PRs, and smoke QA. | The scope is approved and Codex should keep moving through routine verification. |
 
 `prd-ship-loop` is intentionally batch-oriented. A clear ship token such as "ship it", "merge when green", "finish this PRD", or "keep going until deployed" can authorize multiple PRs inside the same approved PRD or task list. It should still stop for secrets/access, destructive out-of-scope operations, unclear product/data risk, failed production smoke, conflicting instructions, or completed scope.
 
@@ -253,12 +266,14 @@ Remove the installed skill folders from your Codex skills directory (and `codex-
 
 ```bash
 rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/codex-handoff-packet ~/.codex/skills/mcstacks-upgrade ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop ~/.codex/skills/.mcstacks
+rm -rf ~/.claude/skills/codex-readonly-review
 ```
 
 Windows PowerShell:
 
 ```powershell
 Remove-Item "$HOME\.codex\skills\claude-readonly-review","$HOME\.codex\skills\claude-design-html","$HOME\.codex\skills\claude-design-loop","$HOME\.codex\skills\codex-handoff-packet","$HOME\.codex\skills\mcstacks-upgrade","$HOME\.codex\skills\pr-batching","$HOME\.codex\skills\prd-review-loop","$HOME\.codex\skills\prd-ship-loop","$HOME\.codex\skills\.mcstacks" -Recurse -Force
+Remove-Item "$HOME\.claude\skills\codex-readonly-review" -Recurse -Force -ErrorAction SilentlyContinue
 ```
 
 ## FAQ
