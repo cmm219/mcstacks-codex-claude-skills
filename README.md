@@ -4,6 +4,8 @@ McStacks is a public Codex workflow stack for people who want local AI-assisted 
 
 Codex owns the repo, working tree, QA, PRs, and shipping decisions. Claude is brought in as review input: read-only reviewer, planning challenger, scoped design partner, or structured handoff author. The result is a practical stack for moving from rough scope to verified PR without letting model output become authority.
 
+The same principle works in both directions: one mirror skill, [`codex-readonly-review`](codex-readonly-review/), is for people who drive with Claude Code and want Codex as the read-only second reviewer. Whichever model drives owns the repo; the reviewer never edits.
+
 ## Who This Is For
 
 - Builders using Codex who want a stronger review and shipping loop.
@@ -142,7 +144,7 @@ Start with [`examples/README.md`](examples/README.md), then open the example tha
 | Docs | [`docs/`](docs/) | Safety model, troubleshooting, and repo structure guidance. |
 | Tasks | [`TASKS.md`](TASKS.md) | Public roadmap items and follow-up work. |
 
-These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows that load skills from a Codex skills directory such as `$CODEX_HOME/skills` or `~/.codex/skills`.
+These skills target OpenAI Codex / Codex Desktop / Codex CLI skill workflows that load skills from a Codex skills directory such as `$CODEX_HOME/skills` or `~/.codex/skills`. The one exception is `codex-readonly-review`, which is a Claude Code skill and loads from the Claude skills directory (`~/.claude/skills`).
 
 ## Why Codex + Claude?
 
@@ -154,6 +156,8 @@ The boundary is intentional:
 - Claude can review or plan in read-only mode.
 - Claude can write frontend/design files only when explicitly scoped by `claude-design-html`.
 - Claude output is never self-approving. Codex reviews Claude plans, diffs, and rendered UI before accepting them.
+
+With `codex-readonly-review` the roles flip but the boundary does not: Claude owns the repo actions and Codex reviews read-only, with the same rule that reviewer output is advisory until the driver verifies it against the code.
 
 The [`brain/`](brain/) folder documents reusable knowledge-routing patterns. It is not a dump of private memory, transcripts, secrets, or project notes.
 
