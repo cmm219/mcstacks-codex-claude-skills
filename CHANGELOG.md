@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 - 2026-06-09
+
+- Add `codex-readonly-review`, the Claude-driver mirror of `claude-readonly-review`: a Claude Code skill that calls the local Codex CLI as a read-only second reviewer while Claude owns all repo actions.
+- Document hard-won codex CLI operational fixes inside the new skill: invalid `service_tier` values fail config load before any prompt runs (and the `"fast"` unblock burns ~2x tokens), `"flex"` is rejected server-side on ChatGPT-plan auth, standard tier means omitting the key (per-call via a clean `CODEX_HOME` copy), and `codex exec` hangs forever on open stdin in non-TTY shells unless stdin is piped or explicitly closed.
+- Add a round-aware effort ladder to the new skill: full reasoning spend on round 1 of a gate, low-effort delta-only re-review rounds, mini-model for mechanical fix-closure checks, and never silently downgrading an approval gate.
+- Skip Claude-driver skills in `install.sh`, `install.ps1`, and `mcstacks-upgrade.mjs` so Codex installs stay Codex-only; README documents the manual Claude-side install.
+
 ## 0.4.1 - 2026-06-05
 
 - Write the Windows install manifest as UTF-8 without a BOM so Node-based upgrade parsing works after `setup.ps1`.

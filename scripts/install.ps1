@@ -19,9 +19,18 @@ if (-not $Destination) {
 
 New-Item -ItemType Directory -Path $Destination -Force | Out-Null
 
+# Claude-driver skills live in this repo for visibility but install into the
+# Claude Code skills directory, not the Codex skills directory.
+$claudeDriverSkills = @("codex-readonly-review")
+
 $skillDirs = Get-ChildItem -LiteralPath $source -Directory | Where-Object {
     Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md")
 }
+
+$skillDirs | Where-Object { $claudeDriverSkills -contains $_.Name } | ForEach-Object {
+    Write-Output "Skipped $($_.Name) (Claude-driver skill; install into your Claude Code skills directory instead)"
+}
+$skillDirs = @($skillDirs | Where-Object { $claudeDriverSkills -notcontains $_.Name })
 
 if (-not $skillDirs) {
     throw "No root-level skill directories found in: $source"

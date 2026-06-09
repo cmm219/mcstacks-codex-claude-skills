@@ -206,10 +206,15 @@ function readGitHead(source) {
   }
 }
 
+// Claude-driver skills live in this repo for visibility but install into the
+// Claude Code skills directory, not the Codex skills directory.
+const claudeDriverSkills = new Set(["codex-readonly-review"]);
+
 async function listSkillDirs(source) {
   const entries = await readdir(source);
   const skills = [];
   for (const entry of entries) {
+    if (claudeDriverSkills.has(entry)) continue;
     const path = join(source, entry);
     let info;
     try {
