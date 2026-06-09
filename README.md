@@ -51,6 +51,22 @@ Use codex-handoff-packet to evaluate this Claude handoff and decide whether Code
 
 The setup wrappers install each root-level directory that contains a `SKILL.md`, run preflight, and write a local McStacks install manifest under the Codex skills directory. Set `CODEX_HOME` to choose a non-default install root. Re-run with `-Force` on Windows or `--force` on macOS/Linux to overwrite an existing McStacks skill install.
 
+One exception: [`codex-readonly-review`](codex-readonly-review/) is a **Claude Code** skill (the mirror direction — Claude drives, Codex reviews), so the setup wrappers skip it. Install it manually into your Claude skills directory:
+
+```powershell
+Copy-Item -Recurse .\codex-readonly-review "$HOME\.claude\skills\codex-readonly-review"
+```
+
+```bash
+cp -R ./codex-readonly-review ~/.claude/skills/codex-readonly-review
+```
+
+Then, in Claude Code:
+
+```text
+Use codex-readonly-review to have Codex review my current diff before I ship it.
+```
+
 ## Who This Is Not For
 
 - People looking for a hosted service or model router.
@@ -92,6 +108,7 @@ Scope -> Review -> Implement -> Verify -> Ship -> Capture
 | Skill | What it does | When to use |
 | --- | --- | --- |
 | [`claude-readonly-review`](claude-readonly-review/) | Sends scoped plans, diffs, or QA evidence to Claude for read-only review while Codex owns all repo actions. | You want a second model to challenge a plan, diff, or risky change before Codex acts. |
+| [`codex-readonly-review`](codex-readonly-review/) | The mirror direction: a **Claude Code** skill that calls the local Codex CLI as a read-only reviewer while Claude owns all repo actions. Installs into the Claude skills directory, not the Codex one. | You drive with Claude Code and want Codex as the second-model reviewer. |
 | [`claude-design-html`](claude-design-html/) | Uses Claude as a scoped frontend design partner, then has Codex review, integrate, and verify the result. | You need visual/design polish but want Codex to keep integration control. |
 | [`claude-design-loop`](claude-design-loop/) | Runs a gated design artifact loop before app implementation begins. | UI work needs artifact approval before code changes. |
 | [`codex-handoff-packet`](codex-handoff-packet/) | Converts a Claude-originated request into a bounded packet Codex can verify before acting. | Claude has proposed work, but Codex must check scope, evidence, and permissions first. |
@@ -228,7 +245,7 @@ node scripts/validate-skills.mjs
 
 ## Uninstall
 
-Remove the installed skill folders from your Codex skills directory:
+Remove the installed skill folders from your Codex skills directory (and `codex-readonly-review` from your Claude skills directory if you installed it):
 
 ```bash
 rm -rf ~/.codex/skills/claude-readonly-review ~/.codex/skills/claude-design-html ~/.codex/skills/claude-design-loop ~/.codex/skills/codex-handoff-packet ~/.codex/skills/mcstacks-upgrade ~/.codex/skills/pr-batching ~/.codex/skills/prd-review-loop ~/.codex/skills/prd-ship-loop ~/.codex/skills/.mcstacks

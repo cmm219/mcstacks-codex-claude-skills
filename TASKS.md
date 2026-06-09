@@ -16,6 +16,15 @@
 
 ## Planned
 
+- Port the round-aware effort ladder and session-resume fallback notes into the public `claude-readonly-review` skill.
+
+  Source reference:
+  The `codex-readonly-review` skill in this repo now documents a round-aware effort ladder (full reasoning spend on round 1 of a gate, cheap delta-only re-review rounds, smaller model for mechanical fix-closure checks). The same economics apply in the Codex-drives direction: round 1 on the strong model, fix-closure re-reviews on the cheaper model with a findings checklist. The maintainer's private export also carries `--continue` / `--fork-session` fallback guidance for session resume.
+
+  Requirements:
+  - Adapt public-safely; no private paths or local-only assumptions.
+  - Run skill validation, privacy scan, and a second-model review before publishing.
+
 - Update the public `claude-readonly-review` skill from the latest exported full version.
 
   Source reference:

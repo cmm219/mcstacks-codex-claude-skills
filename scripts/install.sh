@@ -24,12 +24,28 @@ fi
 
 mkdir -p "$dest"
 
+# Claude-driver skills live in this repo for visibility but install into the
+# Claude Code skills directory, not the Codex skills directory.
+claude_driver_skills=("codex-readonly-review")
+
+is_claude_driver_skill() {
+  local candidate="$1"
+  for excluded in "${claude_driver_skills[@]}"; do
+    [[ "$candidate" == "$excluded" ]] && return 0
+  done
+  return 1
+}
+
 found=0
 for skill in "$source_dir"/*; do
   [[ -d "$skill" ]] || continue
   [[ -f "$skill/SKILL.md" ]] || continue
-  found=1
   name="$(basename "$skill")"
+  if is_claude_driver_skill "$name"; then
+    echo "Skipped $name (Claude-driver skill; install into your Claude Code skills directory instead)"
+    continue
+  fi
+  found=1
   if [[ -e "$dest/$name" ]]; then
     if [[ "$force" != "1" ]]; then
       echo "Target already exists: $dest/$name. Re-run with --force to overwrite." >&2
@@ -88,6 +104,9 @@ manifest="$manifest_dir/manifest.json"
     [[ -d "$skill" ]] || continue
     [[ -f "$skill/SKILL.md" ]] || continue
     name="$(basename "$skill")"
+    if is_claude_driver_skill "$name"; then
+      continue
+    fi
     if [[ "$first" != "1" ]]; then
       printf ',\n'
     fi
